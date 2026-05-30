@@ -187,9 +187,9 @@ function StarField({ enabled = true }) {
 
     // Три шари: far · mid · near (швидкість паралаксу різна)
     const LAYERS = [
-      { count: 220, minR: 0.3, maxR: 0.7,  baseA: 0.35, parallax: 0.04 }, // далеко
-      { count: 110, minR: 0.6, maxR: 1.1,  baseA: 0.25, parallax: 0.10 }, // середньо
-      { count:  55, minR: 0.9, maxR: 1.6,  baseA: 0.18, parallax: 0.20 }, // близько
+      { count: 220, minR: 0.3, maxR: 0.7,  baseA: 0.60, parallax: 0.04 }, // далеко
+      { count: 110, minR: 0.6, maxR: 1.1,  baseA: 0.45, parallax: 0.10 }, // середньо
+      { count:  55, minR: 0.9, maxR: 1.6,  baseA: 0.35, parallax: 0.20 }, // близько
     ];
 
     function buildStars(W, H) {
@@ -274,7 +274,7 @@ function StarField({ enabled = true }) {
         position: 'fixed', inset: 0,
         width: '100%', height: '100%',
         pointerEvents: 'none',
-        zIndex: 0,
+        zIndex: 5,
         mixBlendMode: 'screen',
       }}
     />
