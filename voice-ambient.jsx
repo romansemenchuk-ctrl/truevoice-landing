@@ -169,9 +169,122 @@ function VoiceDrift({ accent = '#C8102E', enabled = true }) {
   );
 }
 
+/* ── StarField: три шари зірок з паралаксом на скролі ────── */
+function StarField({ enabled = true }) {
+  const canvasRef = useAmbRef(null);
+  const rafRef    = useAmbRef(0);
+  const scrollRef = useAmbRef(0);
+  const starsRef  = useAmbRef(null);
+
+  useAmbEff(() => {
+    if (!enabled) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let W = 0, H = 0, DPR = 1;
+
+    // Три шари: far · mid · near (швидкість паралаксу різна)
+    const LAYERS = [
+      { count: 220, minR: 0.3, maxR: 0.7,  baseA: 0.35, parallax: 0.04 }, // далеко
+      { count: 110, minR: 0.6, maxR: 1.1,  baseA: 0.25, parallax: 0.10 }, // середньо
+      { count:  55, minR: 0.9, maxR: 1.6,  baseA: 0.18, parallax: 0.20 }, // близько
+    ];
+
+    function buildStars(W, H) {
+      return LAYERS.map(layer =>
+        Array.from({ length: layer.count }, () => ({
+          x:     Math.random() * W,
+          y:     Math.random() * H,
+          r:     layer.minR + Math.random() * (layer.maxR - layer.minR),
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.4 + Math.random() * 0.8,   // twinkle speed
+        }))
+      );
+    }
+
+    function resize() {
+      DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width  = Math.floor(W * DPR);
+      canvas.height = Math.floor(H * DPR);
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      starsRef.current = buildStars(W, H);
+    }
+
+    function onScroll() { scrollRef.current = window.scrollY || 0; }
+
+    function frame(now) {
+      const t = now * 0.001;
+      ctx.clearRect(0, 0, W, H);
+
+      const stars = starsRef.current;
+      if (!stars) { rafRef.current = requestAnimationFrame(frame); return; }
+
+      LAYERS.forEach((layer, li) => {
+        const offsetY = -(scrollRef.current * layer.parallax) % H;
+
+        stars[li].forEach(s => {
+          // twinkle: opacity pulse
+          const twinkle = reduced ? 1 : (0.55 + 0.45 * Math.sin(t * s.speed + s.phase));
+          const alpha = layer.baseA * twinkle;
+
+          // Two draws: base position + wrapped (seamless vertical loop)
+          const draws = [s.y + offsetY, s.y + offsetY + H, s.y + offsetY - H];
+          draws.forEach(py => {
+            if (py < -4 || py > H + 4) return;
+            ctx.beginPath();
+            ctx.arc(s.x, py, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(245,245,242,${alpha.toFixed(3)})`;
+            ctx.fill();
+          });
+        });
+      });
+
+      rafRef.current = requestAnimationFrame(frame);
+    }
+
+    function start() { if (!rafRef.current) rafRef.current = requestAnimationFrame(frame); }
+    function stop()  { cancelAnimationFrame(rafRef.current); rafRef.current = 0; }
+    function onVis() { if (document.hidden) stop(); else start(); }
+
+    resize();
+    onScroll();
+    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('visibilitychange', onVis);
+    start();
+
+    return () => {
+      stop();
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [enabled]);
+
+  if (!enabled) return null;
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      style={{
+        position: 'fixed', inset: 0,
+        width: '100%', height: '100%',
+        pointerEvents: 'none',
+        zIndex: 0,
+        mixBlendMode: 'screen',
+      }}
+    />
+  );
+}
+
 function VoiceAmbient({ accent = '#C8102E', spine = true, drift = true }) {
   return (
     <>
+      <StarField enabled={true}/>
       <VoiceDrift accent={accent} enabled={drift}/>
       <VoiceSpine accent={accent} enabled={spine}/>
     </>
