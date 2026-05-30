@@ -110,7 +110,7 @@ function Nav({ onApply }) {
             <span className="tv-hide-narrow" style={{
               fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 500,
               letterSpacing: '0.30em', textTransform: 'uppercase', color: 'var(--fg-faint)'
-            }}>/ Семенчук</span>
+            }}>/ Academy</span>
           </a>
 
           <nav className="tv-nav-links">
