@@ -431,13 +431,14 @@ function Footer() {
               <li>info@true-voice.com.ua</li>
               <li>+38 (000) 000-00-00</li>
               <li style={{ color: 'var(--fg-faint)' }}>м. Київ</li>
+              <li><a href="https://truevoice.academy/contacts" target="_blank" rel="noopener noreferrer">Усі контакти</a></li>
             </ul>
           </div>
           <div>
             <h4>Документи</h4>
             <ul>
-              <li><a href="#">Політика конфіденційності</a></li>
-              <li><a href="#">Публічна оферта</a></li>
+              <li><a href="https://truevoice.academy/privacy" target="_blank" rel="noopener noreferrer">Політика конфіденційності</a></li>
+              <li><a href="https://truevoice.academy/public_offer" target="_blank" rel="noopener noreferrer">Публічна оферта</a></li>
               <li><a href="#">Гарантія повернення</a></li>
             </ul>
           </div>
@@ -507,7 +508,9 @@ function StickyBar({ onApply }) {
 function Popup({ open, onClose }) {
   const [email, setEmail] = useStateC('');
   const [phone, setPhone] = useStateC('');
-  const [sent,  setSent]  = useStateC(false);
+  // status: 'form' -> 'paying' -> 'success' | 'pending' | 'error'
+  const [status, setStatus] = useStateC('form');
+  const [errorMsg, setErrorMsg] = useStateC('');
   const overlayRef = useRefC(null);
 
   useEffectC(() => {
@@ -522,11 +525,79 @@ function Popup({ open, onClose }) {
     };
   }, [open, onClose]);
 
-  function submit(e) {
+  // WayForPay widget posts a message to the parent window when the user
+  // closes the iframe without paying — if that happens mid-payment, unstick
+  // the form instead of leaving the button frozen on "Зачекай…".
+  useEffectC(() => {
+    function onMessage(e) {
+      if (typeof e.data === 'string' && e.data.indexOf('WfpWidgetEventClose') !== -1) {
+        setStatus((s) => (s === 'paying' ? 'form' : s));
+      }
+    }
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+
+  async function submit(e) {
     e.preventDefault();
     if (!/.+@.+\..+/.test(email)) return;
-    if (phone.replace(/\D/g,'').length < 7) return;
-    setSent(true);
+    if (phone.replace(/\D/g, '').length < 7) return;
+
+    setStatus('paying');
+    setErrorMsg('');
+
+    if (window.fbq) {
+      window.fbq('track', 'Lead', { content_name: 'TrueVoice Mini' });
+    }
+
+    let order;
+    try {
+      const res = await fetch('/api/wayforpay-create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, phone }),
+      });
+      order = await res.json();
+      if (!res.ok) throw new Error(order && (order.message || order.error) || 'request_failed');
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg('Оплата тимчасово недоступна. Напиши нам на info@true-voice.com.ua — підключимо вручну.');
+      return;
+    }
+
+    if (!window.Wayforpay) {
+      setStatus('error');
+      setErrorMsg('Не вдалося завантажити платіжний віджет. Онови сторінку і спробуй ще раз.');
+      return;
+    }
+
+    try {
+      const wayforpay = new window.Wayforpay();
+      wayforpay.run(
+        order,
+        function onApproved() {
+          if (window.fbq) {
+            window.fbq(
+              'track',
+              'Purchase',
+              { value: order.amount, currency: order.currency, content_name: 'TrueVoice Mini' },
+              { eventID: order.orderReference }
+            );
+          }
+          setStatus('success');
+        },
+        function onDeclined() {
+          setStatus('error');
+          setErrorMsg('Оплату відхилено. Спробуй іншу картку або напиши нам на info@true-voice.com.ua.');
+        },
+        function onPending() {
+          setStatus('pending');
+        }
+      );
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg('Платіжний віджет не відкрився. Онови сторінку і спробуй ще раз.');
+    }
   }
 
   function handleOverlayClick(e) {
@@ -555,18 +626,43 @@ function Popup({ open, onClose }) {
           <span className="new">15&nbsp;$</span>
         </div>
 
-        {sent ? (
+        {status === 'success' ? (
           <div className="tv-popup-success">
-            <span className="tv-overline" style={{ color: 'var(--tv-gold)' }}>Заявку отримано</span>
+            <span className="tv-overline" style={{ color: 'var(--tv-gold)' }}>Оплату підтверджено</span>
             <h4 className="tv-h3" style={{ marginTop: 10 }}>
-              Зараз перенаправимо тебе на оплату.
+              Готово. Перевір пошту.
             </h4>
             <p className="tv-small" style={{ marginTop: 12 }}>
-              Лист із доступом до Telegram-бота прийде на пошту після підтвердження оплати.
+              Лист із доступом до Telegram-бота прийде на {email || 'вказану пошту'} протягом кількох хвилин.
               Якщо щось пішло не так — напиши нам на <strong>info@true-voice.com.ua</strong>.
             </p>
             <button className="tv-btn tv-btn--ghost" style={{ marginTop: 18 }} onClick={onClose}>
               Закрити
+            </button>
+          </div>
+        ) : status === 'pending' ? (
+          <div className="tv-popup-success">
+            <span className="tv-overline" style={{ color: 'var(--tv-gold)' }}>Обробляємо оплату</span>
+            <h4 className="tv-h3" style={{ marginTop: 10 }}>
+              Це займе кілька хвилин.
+            </h4>
+            <p className="tv-small" style={{ marginTop: 12 }}>
+              Як тільки банк підтвердить оплату, лист із доступом прийде на {email || 'вказану пошту'}.
+              Якщо протягом години нічого не прийде — напиши нам на <strong>info@true-voice.com.ua</strong>.
+            </p>
+            <button className="tv-btn tv-btn--ghost" style={{ marginTop: 18 }} onClick={onClose}>
+              Закрити
+            </button>
+          </div>
+        ) : status === 'error' ? (
+          <div className="tv-popup-success">
+            <span className="tv-overline" style={{ color: 'var(--tv-accent)' }}>Не вийшло</span>
+            <h4 className="tv-h3" style={{ marginTop: 10 }}>
+              Оплата не пройшла.
+            </h4>
+            <p className="tv-small" style={{ marginTop: 12 }}>{errorMsg}</p>
+            <button className="tv-btn tv-btn--big" style={{ marginTop: 18 }} onClick={() => setStatus('form')}>
+              Спробувати ще раз
             </button>
           </div>
         ) : (
@@ -587,13 +683,13 @@ function Popup({ open, onClose }) {
                 placeholder="+380 00 000 0000"
                 autoComplete="tel"/>
             </label>
-            <button className="tv-btn tv-btn--big" type="submit">
-              Забрати від&nbsp;15$ <span className="arrow">→</span>
+            <button className="tv-btn tv-btn--big" type="submit" disabled={status === 'paying'}>
+              {status === 'paying' ? 'Зачекай…' : <>Забрати від&nbsp;15$ <span className="arrow">→</span></>}
             </button>
             <p className="tv-small" style={{ marginTop: 4 }}>
               14 днів гарантії повернення. Натискаючи кнопку, ти погоджуєшся з{' '}
-              <a href="#" style={{ color: 'var(--fg-muted)' }}>офертою</a> та{' '}
-              <a href="#" style={{ color: 'var(--fg-muted)' }}>політикою</a>.
+              <a href="https://truevoice.academy/public_offer" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fg-muted)' }}>офертою</a> та{' '}
+              <a href="https://truevoice.academy/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fg-muted)' }}>політикою</a>.
             </p>
           </form>
         )}

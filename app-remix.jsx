@@ -128,7 +128,12 @@ const BAND_4 = [
 function App() {
   const [t, setTweak] = window.useTweaks ? window.useTweaks(RX_DEFAULTS) : [RX_DEFAULTS, () => {}];
   const [popupOpen, setPopupOpen] = useRxState(false);
-  const openPopup = useRxCb(() => setPopupOpen(true), []);
+  const openPopup = useRxCb(() => {
+    if (window.fbq) {
+      window.fbq('track', 'InitiateCheckout', { content_name: 'TrueVoice Mini', value: 15, currency: 'USD' });
+    }
+    setPopupOpen(true);
+  }, []);
   const closePopup = useRxCb(() => setPopupOpen(false), []);
 
   useRxEffect(() => {

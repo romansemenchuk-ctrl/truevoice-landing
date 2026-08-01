@@ -1,0 +1,6 @@
+{
+  "name": "truevoice-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TrueVoice Mini — static landing (no build step) + one Vercel serverless function for WayForPay order signing."
+}
