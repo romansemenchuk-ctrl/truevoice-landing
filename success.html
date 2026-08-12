@@ -121,7 +121,7 @@
     <span>© 2026 · TRUE VOICE</span>
     <a href="offer">Публічна оферта</a>
     <a href="privacy">Політика конфіденційності</a>
-    <a href="mailto:roman.semenchuk@gmail.com">roman.semenchuk@gmail.com</a>
+    <a href="mailto:hello@truevoice.academy">hello@truevoice.academy</a>
   </div>
 </main>
 
@@ -143,7 +143,7 @@
     btn.addEventListener('click', function () {
       if (!email || !phone) {
         // we do not have the buyer's details in the URL — ask instead of guessing
-        msg.textContent = 'Напиши нам на roman.semenchuk@gmail.com з темою «Апгрейд» — надішлемо посилання на доплату.';
+        msg.textContent = 'Напиши нам на hello@truevoice.academy з темою «Апгрейд» — надішлемо посилання на доплату.';
         return;
       }
       btn.disabled = true;
@@ -172,7 +172,7 @@
         })
         .catch(function () {
           btn.disabled = false;
-          msg.textContent = 'Не вдалося відкрити оплату. Напиши нам на roman.semenchuk@gmail.com — підключимо вручну.';
+          msg.textContent = 'Не вдалося відкрити оплату. Напиши нам на hello@truevoice.academy — підключимо вручну.';
         });
     });
   })();

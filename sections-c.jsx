@@ -422,8 +422,8 @@ function Footer() {
                 fontFamily: 'var(--font-display)', fontWeight: 800,
                 fontSize: 18, letterSpacing: '0.05em', textTransform: 'uppercase',
                 color: 'var(--fg)',
-              }}>TRUE VOICE</div>
-              <div className="tv-overline" style={{ marginTop: 4 }}>Курс Романа Семенчука · Київ</div>
+              }}>TRUE VOICE ACADEMY</div>
+              <div className="tv-overline" style={{ marginTop: 4 }}>Київ</div>
             </div>
           </div>
           <p>
@@ -441,9 +441,9 @@ function Footer() {
           <div>
             <h4>Контакти</h4>
             <ul>
-              <li><a href="mailto:roman.semenchuk@gmail.com">roman.semenchuk@gmail.com</a></li>
+              <li><a href="mailto:hello@truevoice.academy">hello@truevoice.academy</a></li>
               <li><a href="tel:+380937671577">+38 (093) 767-15-77</a></li>
-              <li style={{ color: 'var(--fg-faint)' }}>Україна, 01103, м. Київ,<br/>вул. Заболотного, 66, кв. 42</li>
+              {/* postal address lives on the full contacts page, not here */}
               <li><a href="https://truevoice.academy/contacts" target="_blank" rel="noopener noreferrer">Усі контакти</a></li>
             </ul>
           </div>
@@ -599,7 +599,7 @@ function Popup({ open, onClose }) {
       if (!res.ok) throw new Error(order && (order.message || order.error) || 'request_failed');
     } catch (err) {
       setStatus('error');
-      setErrorMsg('Оплата тимчасово недоступна. Напиши нам на roman.semenchuk@gmail.com — підключимо вручну.');
+      setErrorMsg('Оплата тимчасово недоступна. Напиши нам на hello@truevoice.academy — підключимо вручну.');
       return;
     }
 
@@ -630,7 +630,7 @@ function Popup({ open, onClose }) {
         },
         function onDeclined() {
           setStatus('error');
-          setErrorMsg('Оплату відхилено. Спробуй іншу картку або напиши нам на roman.semenchuk@gmail.com.');
+          setErrorMsg('Оплату відхилено. Спробуй іншу картку або напиши нам на hello@truevoice.academy.');
         },
         function onPending() {
           setStatus('pending');
@@ -696,7 +696,7 @@ function Popup({ open, onClose }) {
             </h4>
             <p className="tv-small" style={{ marginTop: 12 }}>
               Лист із доступом до Telegram-бота прийде на {email || 'вказану пошту'} протягом кількох хвилин.
-              Якщо щось пішло не так — напиши нам на <strong>roman.semenchuk@gmail.com</strong>.
+              Якщо щось пішло не так — напиши нам на <strong>hello@truevoice.academy</strong>.
             </p>
             <button className="tv-btn tv-btn--ghost" style={{ marginTop: 18 }} onClick={onClose}>
               Закрити
@@ -710,7 +710,7 @@ function Popup({ open, onClose }) {
             </h4>
             <p className="tv-small" style={{ marginTop: 12 }}>
               Як тільки банк підтвердить оплату, лист із доступом прийде на {email || 'вказану пошту'}.
-              Якщо протягом години нічого не прийде — напиши нам на <strong>roman.semenchuk@gmail.com</strong>.
+              Якщо протягом години нічого не прийде — напиши нам на <strong>hello@truevoice.academy</strong>.
             </p>
             <button className="tv-btn tv-btn--ghost" style={{ marginTop: 18 }} onClick={onClose}>
               Закрити
