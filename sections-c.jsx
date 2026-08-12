@@ -70,7 +70,7 @@ function Outcomes() {
         <span className="tv-overline" style={{ color: 'var(--tv-accent)' }}>Підсумок</span>
         <p className="tv-body" style={{ color: 'var(--fg)', maxWidth: '54ch', fontSize: 17 }}>
           Без курсу голос непередбачуваний і підводить у важливі моменти.
-          З курсом — маєш систему, яка <strong style={{ color: 'var(--tv-accent)' }}>працює завжди</strong>.
+          З курсом — маєш систему, до якої <strong style={{ color: 'var(--tv-accent)' }}>можеш повернутися в будь-який момент</strong>.
         </p>
       </div>
     </section>
@@ -174,7 +174,7 @@ function Voices() {
       ini: 'ВТ',
       who: 'Віктор Терент’єв',
       role: 'бізнес-коуч',
-      q: 'Виявилось, що в мене горло було затиснуте майже 24/7. Я це навіть не помічав. На 3–4 день почало відпускати щелепу, голос став нижчий, тепліший. І прикол у тому, що я став менше зриватись на людей.',
+      q: 'Виявилось, що в мене горло було затиснуте майже 24/7. Я це навіть не помічав. На 3–4 день почала відпускати щелепа, голос став нижчим і теплішим. І прикол у тому, що я став менше зриватись на людей.',
       hot: 16,
     },
     {
@@ -266,7 +266,7 @@ function Guarantee() {
             Ти нічим не ризикуєш, тільки отримуєш можливість нарешті почути свій справжній голос.
           </p>
           <p className="tv-small" style={{ marginTop: 14, maxWidth: '46ch' }}>
-            7 місяців доступу · оплата через WayForPay · ФОП на УРР · документи відкриті.
+            7 місяців доступу · оплата через WayForPay · ФОП Семенчук Р.Г. · документи відкриті.
           </p>
         </div>
       </div>
@@ -322,7 +322,7 @@ function FinalCTA({ onApply }) {
     <section className="tv-section tv-final" id="apply">
       <div className="tv-final-card">
         <div className="tv-final-head">
-          <window.Eyebrow tone="accent" dot>Останній шанс · ціна повертається до 45 $</window.Eyebrow>
+          <window.Eyebrow tone="accent" dot>Останній шанс · ціна повертається до 100 $</window.Eyebrow>
           <h2 className="tv-h2" style={{ marginTop: 14, maxWidth: '20ch' }}>
             До кінця <span style={{ fontStyle: 'italic', fontWeight: 300 }}>акції</span>.
           </h2>
@@ -339,15 +339,16 @@ function FinalCTA({ onApply }) {
 
         <div className="tv-final-offer">
           <div className="tv-final-price">
-            <span className="old">45&nbsp;$</span>
+            <span className="old">100&nbsp;$</span>
             <span className="arr">→</span>
             <span className="new">15&nbsp;$</span>
           </div>
           <button className="tv-btn tv-btn--big" onClick={onApply}>
-            Забрати від&nbsp;15$ <span className="arrow">→</span>
+            Забрати всього за&nbsp;$15 <span className="arrow">→</span>
           </button>
           <ul className="tv-final-list">
-            <li><span className="b"/>7 практик по 20–30 хвилин</li>
+            <li><span className="b"/>7 практик по 15–20 хвилин</li>
+            <li><span className="b"/>Вижимка 30 років досвіду</li>
             <li><span className="b"/>PDF-гайди + аудіо-версії</li>
             <li><span className="b"/>Підтримка через Telegram-бот</li>
             <li><span className="b"/>7 місяців доступу</li>
@@ -364,14 +365,26 @@ function FAQ() {
   const items = [
     { q: 'Чи потрібна музична освіта?',
       a: 'Ні, зовсім не потрібна. Система працює з природними механізмами тіла, які є в кожного. Не потрібно вміти співати або грати на інструментах.' },
-    { q: 'Що якщо мені 50+ років?',
+    { q: 'Що, якщо мені 50+ років?',
       a: 'Вік не має значення. Дихання, розслаблення м’язів і робота з нервовою системою працюють у будь-якому віці. Навпаки, з віком ці навички стають ще важливішими.' },
     { q: '7 днів — це серйозно?',
       a: 'Перші зміни відчуваєш вже після першої практики. За 7 днів формується новий тілесний досвід. Це не фінал, а початок — база, на якій можеш будувати далі.' },
-    { q: 'Що якщо не доведу до кінця?',
+    { q: 'Що, якщо не доведу до кінця?',
       a: 'Доступ до курсу — 7 місяців. Можеш проходити у своєму темпі, повертатися до уроків, перепроходити практики. Ніякого тиску і дедлайнів.' },
     { q: 'Чи допоможе при хронічній хрипоті?',
       a: 'Якщо хрипота не пов’язана з серйозними медичними проблемами, то так. Часто хрипота — це наслідок хронічної напруги. Але при серйозних симптомах спочатку до лікаря.' },
+    { q: 'Як проходить оплата?',
+      a: 'Карткою через сервіс WayForPay. Натискаєш «Забрати всього за $15», заповнюєш пошту й телефон — і відкривається захищена форма оплати з підтвердженням через банк (3D Secure). Дані картки обробляє WayForPay, на сайті вони не зберігаються. Одразу після оплати на пошту приходить посилання на Telegram-бот.' },
+    { q: 'Як проходить навчання?',
+      a: 'Щодня в Telegram-бот приходить один короткий урок: пояснення, практика і додаткова вправа для закріплення. Виконувати можна в будь-який зручний час — бот не прив’язує тебе до розкладу. Після кожної практики є короткий фокус: що помітити в тілі й голосі та як перенести це в звичайне мовлення.' },
+    { q: 'Чи потрібен інвентар?',
+      a: 'Ні, спеціальний інвентар не потрібен — усе робиться вдома. Бажано мати навушники: у них краще чути нюанси дихання й голосу. За бажанням — килимок, якщо частина вправ буде лежачи, плед (у дихальних практиках тіло швидше охолоджується) і пляшка води. Головне — тихе місце й 15–20 хвилин без переривань.' },
+    { q: 'А якщо пропущу день?',
+      a: 'Нічого страшного — доступ лишається на 7 місяців, тож пропущений урок можна пройти пізніше або зробити два за день. Але найкращий результат дає регулярність: 15–20 хвилин щодня працюють краще, ніж усе за один раз. Якщо випав з ритму — просто повернись з наступного дня, навіть у короткій версії практики.' },
+    { q: 'Чи зміниться тембр?',
+      a: 'Тип голосу не зміниться — баритон не стане тенором. Але тембр помітно розкривається, коли зникають спазми: голос стає стабільнішим, глибшим і резонанснішим, менше «піску» й затиску. Ти лишаєшся собою, але звучиш вільніше. У перші дні голос може звучати трохи інакше через адаптацію — це нормально.' },
+    { q: 'Це безпечно?',
+      a: 'Так. Усі практики м’які, без форсування: ніяких «перетерпіти» чи «через біль», інтенсивність завжди можна зменшити. Нормально відчувати тепло в тілі, розслаблення щелепи, іноді емоційну хвилю. Якщо з’явиться запаморочення чи різкий дискомфорт — зупинись і поверни звичайне дихання. За наявності серцево-судинних захворювань, епілепсії, вагітності чи нещодавніх операцій практикуй без затримок дихання і порадься з лікарем.' },
   ];
   return (
     <section className="tv-section" id="faq">
@@ -428,27 +441,27 @@ function Footer() {
           <div>
             <h4>Контакти</h4>
             <ul>
-              <li>info@true-voice.com.ua</li>
-              <li>+38 (000) 000-00-00</li>
-              <li style={{ color: 'var(--fg-faint)' }}>м. Київ</li>
+              <li><a href="mailto:roman.semenchuk@gmail.com">roman.semenchuk@gmail.com</a></li>
+              <li><a href="tel:+380937671577">+38 (093) 767-15-77</a></li>
+              <li style={{ color: 'var(--fg-faint)' }}>Україна, 01103, м. Київ,<br/>вул. Заболотного, 66, кв. 42</li>
               <li><a href="https://truevoice.academy/contacts" target="_blank" rel="noopener noreferrer">Усі контакти</a></li>
             </ul>
           </div>
           <div>
             <h4>Документи</h4>
             <ul>
-              <li><a href="https://truevoice.academy/privacy" target="_blank" rel="noopener noreferrer">Політика конфіденційності</a></li>
-              <li><a href="https://truevoice.academy/public_offer" target="_blank" rel="noopener noreferrer">Публічна оферта</a></li>
-              <li><a href="#">Гарантія повернення</a></li>
+              <li><a href="privacy">Політика конфіденційності</a></li>
+              <li><a href="offer">Публічна оферта</a></li>
+              <li><a href="offer#refund">Гарантія повернення</a></li>
             </ul>
           </div>
           <div>
             <h4>Соцмережі</h4>
             <ul>
-              <li><a href="#">Instagram</a></li>
-              <li><a href="#">YouTube</a></li>
-              <li><a href="#">Telegram-канал</a></li>
-              <li><a href="#">Facebook</a></li>
+              <li><a href="https://instagram.com/true.voice7" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+              <li><a href="https://youtube.com/thinksidetv" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+              <li><a href="https://t.me/truevoice_official" target="_blank" rel="noopener noreferrer">Telegram-канал</a></li>
+              <li><a href="https://tiktok.com/roman.thinkside" target="_blank" rel="noopener noreferrer">TikTok</a></li>
             </ul>
           </div>
         </div>
@@ -466,7 +479,7 @@ function Footer() {
       </div>
 
       <div className="tv-footer-bottom">
-        <span>ФОП Петренко П.П. · © 2026 · TRUE VOICE</span>
+        <span>ФОП Семенчук Р.Г. · РНОКПП 3262911939 · © 2026 · TRUE VOICE</span>
         <span style={{ color: 'var(--fg-muted)' }}>Set in Stratos &amp; Inter · v.2026.05</span>
         <span>Made in Kyiv · UA</span>
       </div>
@@ -492,26 +505,51 @@ function StickyBar({ onApply }) {
     <div className={`tv-sticky ${show ? 'visible' : ''}`} aria-hidden={!show}>
       <div className="tv-sticky-info">
         <div className="price">
-          <span className="old">45&nbsp;$</span>
+          <span className="old">100&nbsp;$</span>
           <span className="new">15&nbsp;$</span>
         </div>
         <span className="tv-sticky-tag">14 днів гарантії</span>
       </div>
       <button className="tv-btn tv-btn--big" onClick={onApply}>
-        Забрати від&nbsp;15$ <span className="arrow">→</span>
+        Забрати всього за&nbsp;$15 <span className="arrow">→</span>
       </button>
     </div>
   );
 }
 
 /* ---------- POPUP ---------- */
+const TV_PLANS = [
+  {
+    key: 'base',
+    name: 'Базовий',
+    price: 15,
+    old: 100,
+    perks: ['7 практик по 15–20 хвилин', 'PDF-гайди + аудіо-версії', '7 місяців доступу'],
+  },
+  {
+    key: 'pro',
+    name: 'З підтримкою',
+    price: 25,
+    old: 120,
+    badge: 'Обирають найчастіше',
+    perks: [
+      'Усе з базового пакета',
+      'Групова Q&A-сесія наживо з Романом',
+      'Запис сесії + розбір типових питань',
+      'Бонусні протоколи: перед виступом, після стресу, зранку',
+    ],
+  },
+];
+
 function Popup({ open, onClose }) {
   const [email, setEmail] = useStateC('');
   const [phone, setPhone] = useStateC('');
+  const [plan, setPlan] = useStateC('pro');
   // status: 'form' -> 'paying' -> 'success' | 'pending' | 'error'
   const [status, setStatus] = useStateC('form');
   const [errorMsg, setErrorMsg] = useStateC('');
   const overlayRef = useRefC(null);
+  const chosen = TV_PLANS.find((p) => p.key === plan) || TV_PLANS[0];
 
   useEffectC(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -547,7 +585,7 @@ function Popup({ open, onClose }) {
     setErrorMsg('');
 
     if (window.fbq) {
-      window.fbq('track', 'Lead', { content_name: 'TrueVoice Mini' });
+      window.fbq('track', 'Lead', { content_name: chosen.name, value: chosen.price, currency: 'USD' });
     }
 
     let order;
@@ -555,13 +593,13 @@ function Popup({ open, onClose }) {
       const res = await fetch('/api/wayforpay-create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, phone }),
+        body: JSON.stringify({ email, phone, plan }),
       });
       order = await res.json();
       if (!res.ok) throw new Error(order && (order.message || order.error) || 'request_failed');
     } catch (err) {
       setStatus('error');
-      setErrorMsg('Оплата тимчасово недоступна. Напиши нам на info@true-voice.com.ua — підключимо вручну.');
+      setErrorMsg('Оплата тимчасово недоступна. Напиши нам на roman.semenchuk@gmail.com — підключимо вручну.');
       return;
     }
 
@@ -580,15 +618,19 @@ function Popup({ open, onClose }) {
             window.fbq(
               'track',
               'Purchase',
-              { value: order.amount, currency: order.currency, content_name: 'TrueVoice Mini' },
+              { value: order.amount, currency: order.currency, content_name: chosen.name },
               { eventID: order.orderReference }
             );
           }
           setStatus('success');
+          // hand off to the thank-you page: it carries the onboarding
+          // steps and, for base buyers, the upgrade offer
+          const q = new URLSearchParams({ plan, email, phone });
+          window.location.href = `success?${q.toString()}`;
         },
         function onDeclined() {
           setStatus('error');
-          setErrorMsg('Оплату відхилено. Спробуй іншу картку або напиши нам на info@true-voice.com.ua.');
+          setErrorMsg('Оплату відхилено. Спробуй іншу картку або напиши нам на roman.semenchuk@gmail.com.');
         },
         function onPending() {
           setStatus('pending');
@@ -613,18 +655,38 @@ function Popup({ open, onClose }) {
         <button className="tv-popup-close" onClick={onClose} aria-label="Закрити">×</button>
 
         <span className="tv-overline" style={{ color: 'var(--tv-accent)' }}>Реєстрація · TRUE VOICE</span>
-        <h3 className="tv-h2" style={{ fontSize: 'clamp(28px, 7vw, 40px)', marginTop: 8 }}>
-          Забрати від <span style={{ color:'var(--tv-accent)' }}>15$</span> зараз.
+        <h3 className="tv-h2" style={{ fontSize: 'clamp(26px, 6.4vw, 36px)', marginTop: 8 }}>
+          Обери формат.
         </h3>
-        <p className="tv-body" style={{ marginTop: 12, maxWidth: '38ch' }}>
-          7 практик по 20–30 хвилин через Telegram-бот. 7 місяців доступу. 14 днів гарантії повернення.
+        <p className="tv-body" style={{ marginTop: 10, maxWidth: '40ch' }}>
+          Курс однаковий в обох. Різниця в тому, чи розбираємо твій випадок наживо.
         </p>
 
-        <div className="tv-popup-price">
-          <span className="old">45&nbsp;$</span>
-          <span className="arr">→</span>
-          <span className="new">15&nbsp;$</span>
-        </div>
+        {status === 'form' || status === 'paying' ? (
+          <div className="tv-plans" role="radiogroup" aria-label="Формат участі">
+            {TV_PLANS.map((p) => (
+              <button
+                type="button"
+                key={p.key}
+                role="radio"
+                aria-checked={plan === p.key}
+                className={`tv-plan ${plan === p.key ? 'is-on' : ''}`}
+                onClick={() => setPlan(p.key)}>
+                {p.badge ? <span className="tv-plan-badge">{p.badge}</span> : null}
+                <span className="tv-plan-head">
+                  <span className="tv-plan-name">{p.name}</span>
+                  <span className="tv-plan-price">
+                    <span className="old">{p.old}&nbsp;$</span>
+                    <span className="new">{p.price}&nbsp;$</span>
+                  </span>
+                </span>
+                <ul className="tv-plan-perks">
+                  {p.perks.map((perk) => <li key={perk}>{perk}</li>)}
+                </ul>
+              </button>
+            ))}
+          </div>
+        ) : null}
 
         {status === 'success' ? (
           <div className="tv-popup-success">
@@ -634,7 +696,7 @@ function Popup({ open, onClose }) {
             </h4>
             <p className="tv-small" style={{ marginTop: 12 }}>
               Лист із доступом до Telegram-бота прийде на {email || 'вказану пошту'} протягом кількох хвилин.
-              Якщо щось пішло не так — напиши нам на <strong>info@true-voice.com.ua</strong>.
+              Якщо щось пішло не так — напиши нам на <strong>roman.semenchuk@gmail.com</strong>.
             </p>
             <button className="tv-btn tv-btn--ghost" style={{ marginTop: 18 }} onClick={onClose}>
               Закрити
@@ -648,7 +710,7 @@ function Popup({ open, onClose }) {
             </h4>
             <p className="tv-small" style={{ marginTop: 12 }}>
               Як тільки банк підтвердить оплату, лист із доступом прийде на {email || 'вказану пошту'}.
-              Якщо протягом години нічого не прийде — напиши нам на <strong>info@true-voice.com.ua</strong>.
+              Якщо протягом години нічого не прийде — напиши нам на <strong>roman.semenchuk@gmail.com</strong>.
             </p>
             <button className="tv-btn tv-btn--ghost" style={{ marginTop: 18 }} onClick={onClose}>
               Закрити
@@ -684,12 +746,14 @@ function Popup({ open, onClose }) {
                 autoComplete="tel"/>
             </label>
             <button className="tv-btn tv-btn--big" type="submit" disabled={status === 'paying'}>
-              {status === 'paying' ? 'Зачекай…' : <>Забрати від&nbsp;15$ <span className="arrow">→</span></>}
+              {status === 'paying'
+                ? 'Зачекай…'
+                : <>Забрати всього за&nbsp;${chosen.price} <span className="arrow">→</span></>}
             </button>
             <p className="tv-small" style={{ marginTop: 4 }}>
               14 днів гарантії повернення. Натискаючи кнопку, ти погоджуєшся з{' '}
-              <a href="https://truevoice.academy/public_offer" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fg-muted)' }}>офертою</a> та{' '}
-              <a href="https://truevoice.academy/privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fg-muted)' }}>політикою</a>.
+              <a href="offer" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fg-muted)' }}>офертою</a> та{' '}
+              <a href="privacy" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fg-muted)' }}>політикою</a>.
             </p>
           </form>
         )}

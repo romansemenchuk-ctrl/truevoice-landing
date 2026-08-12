@@ -1,0 +1,439 @@
+/* =========================================================
+   TRUE VOICE — REMIX · REFINE LAYER (hand-authored)
+   Loaded LAST, after every remix-*.css export.
+   Kept separate so a re-export from the design tool
+   never clobbers these fixes.
+
+   1 · legibility: red type must not drown in the red wave
+   2 · hero becomes a real two-column composition on desktop
+   3 · proof panel: review card + sharpened arguments
+   4 · −85% save badge
+   5 · logo lockup keeps "/ ACADEMY" on phones
+   6 · mobile fold discipline
+   ========================================================= */
+
+/* ── 1 · LEGIBILITY SCRIM ──────────────────────────────────
+   The voice-wall canvas sits behind the copy. Red headline on
+   red strings loses contrast, so we lay a soft dark panel
+   under the text column only — the wave still reads at the
+   edges, the type sits on near-solid ground. */
+.tv-hero-main { position: relative; z-index: 2; }
+
+/* No panel behind the copy — the wave stays fully visible. Contrast is
+   carried by the per-glyph halo below instead. */
+
+/* accent type gets a dark halo so it never merges with a red string */
+.tv-hero-wordmark .t2,
+.tv-hero-headline .tv-hero-accent,
+.tv-hero-headline .ital {
+  text-shadow:
+    0 0 1px rgba(6,6,7,0.9),
+    0 2px 18px rgba(6,6,7,0.85),
+    0 0 46px rgba(230,0,18,0.30);
+}
+/* stroke copy of the wordmark reads better with a touch more ink */
+.tv-hero-wordmark .t1 { -webkit-text-stroke-color: rgba(246,244,240,0.62); }
+
+
+/* ── 2 · TWO-COLUMN HERO ───────────────────────────────────
+   Fills the dead space on the right with the proof panel
+   instead of empty canvas. */
+.tv-hero-inner { display: flex; flex-direction: column; gap: 22px; }
+.tv-hero-main  { display: flex; flex-direction: column; gap: 18px; }
+
+@media (min-width: 1100px) {
+  .tv-hero-inner {
+    max-width: min(1240px, 92vw);
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.62fr);
+    align-items: center;
+    column-gap: clamp(40px, 4.4vw, 76px);
+  }
+  .tv-hero-main { min-width: 0; }
+}
+
+/* ── 3 · PROOF PANEL ─────────────────────────────────────
+   The right column is an image-led block: one stage frame with the
+   review sitting on it, then three quiet arguments underneath. The
+   aside is width-capped and top-aligned so nothing stretches to fill. */
+.tv-hero-aside {
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 0;
+  width: 100%;
+  max-width: 460px;
+  justify-self: end;
+  align-self: center;
+}
+
+/* stage frame */
+.tv-hero-shot {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--hairline-strong, rgba(246,244,240,0.15));
+  background: #0A0A0B;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+}
+.tv-hero-shot img {
+  display: block;
+  width: 100%; height: auto;
+  aspect-ratio: 16 / 11;          /* reserves space — no layout shift */
+  object-fit: cover;
+  object-position: 50% 40%;
+  /* stage lighting is blue; pull it toward the black-and-red palette */
+  filter: grayscale(0.62) contrast(1.10) brightness(1.04);
+}
+/* intro clip sits in the same frame as the still, same treatment */
+.tv-hero-video {
+  display: block;
+  width: 100%; height: auto;
+  aspect-ratio: 16 / 11;
+  object-fit: cover;
+  object-position: 50% 40%;
+  /* the studio clip is already muted and low-key — it needs far less
+     grading than the stage still, or the face disappears */
+  filter: grayscale(0.28) contrast(1.04) brightness(1.16);
+  background: #0A0A0B;
+}
+/* keep the accent tint off the clip for the same reason */
+.tv-hero-shot:has(.tv-hero-video)::before { opacity: 0.10; }
+.tv-hero-shot:has(.tv-hero-video)::after {
+  background: linear-gradient(180deg, rgba(6,6,7,0.06) 0%, transparent 40%, rgba(6,6,7,0.80) 76%, rgba(6,6,7,0.95) 100%);
+}
+/* play affordance — covers the frame so the whole poster is the target */
+.tv-hero-play {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  border: 0; background: transparent;
+  color: var(--fg); cursor: pointer;
+  font-family: var(--font-body);
+}
+.tv-hero-play .ring {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 58px; height: 58px; border-radius: 50%;
+  border: 1px solid rgba(246,244,240,0.32);
+  background: rgba(6,6,7,0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 0 34px rgba(230,0,18,0.28);
+  transition: transform 320ms var(--ease-power),
+              border-color 320ms var(--ease-power),
+              background 320ms var(--ease-power);
+}
+.tv-hero-play .ring .tv-icon { margin-left: 3px; }   /* optical centring */
+.tv-hero-play .lbl {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--fg-muted);
+  text-shadow: 0 2px 14px rgba(6,6,7,0.9);
+}
+.tv-hero-play .dur { color: var(--fg-faint); }
+.tv-hero-play:hover .ring {
+  transform: scale(1.06);
+  border-color: var(--tv-accent);
+  background: rgba(6,6,7,0.68);
+}
+.tv-hero-play:focus-visible { outline: 1px solid var(--tv-accent); outline-offset: -4px; }
+@media (prefers-reduced-motion: reduce) {
+  .tv-hero-play .ring { transition: none; }
+  .tv-hero-play:hover .ring { transform: none; }
+}
+/* once playing, the frame belongs to the video: drop the tint/scrim so
+   native controls and the picture stay unobstructed */
+.tv-hero-shot:has(.tv-hero-video.is-playing)::before,
+.tv-hero-shot:has(.tv-hero-video.is-playing)::after { opacity: 0; }
+.tv-hero-video.is-playing { filter: none; }
+
+/* accent tint — ties the frame to the brand without recolouring skin */
+.tv-hero-shot::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: var(--tv-accent);
+  mix-blend-mode: color;
+  opacity: 0.24;
+}
+/* scrim so the quote stays readable over the frame */
+.tv-hero-shot::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(6,6,7,0.10) 0%, transparent 34%, rgba(6,6,7,0.86) 78%, rgba(6,6,7,0.96) 100%);
+}
+
+/* review — its own card under the frame, never over the video */
+.tv-hero-review {
+  margin: 0;
+  padding: 15px 17px 14px;
+  background: rgba(12,12,14,0.78);
+  border: 1px solid var(--hairline-strong, rgba(246,244,240,0.15));
+  border-left: 2px solid var(--tv-accent);
+  display: flex; flex-direction: column; gap: 7px;
+}
+.tv-hero-review-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-body);
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.tv-hero-review-tag .dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--tv-accent);
+  box-shadow: 0 0 10px rgba(230,0,18,0.8);
+}
+.tv-hero-review blockquote {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px; line-height: 1.6; font-style: italic;
+  color: var(--fg);
+}
+.tv-hero-review cite {
+  font-family: var(--font-body); font-style: normal;
+  font-size: 11.5px; letter-spacing: 0.04em;
+  color: var(--fg-muted);
+}
+.tv-hero-review cite span { color: var(--fg-faint); }
+
+/* ── arguments: claim + plain-language proof, icon-led ────
+   Back to a readable stack: the claim carries full text colour so
+   it reads as a statement, the proof line sits one step quieter. */
+.tv-hero-specs {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 13px;
+}
+.tv-hero-specs li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px; row-gap: 2px;
+  font-family: var(--font-body);
+}
+.tv-hero-specs .tv-icon {
+  grid-row: 1 / span 2;
+  margin-top: 1px;
+  color: var(--tv-accent);
+}
+.tv-hero-specs li strong {
+  font-size: 13.5px; font-weight: 600; line-height: 1.4;
+  color: var(--fg); letter-spacing: 0.005em;
+}
+.tv-hero-specs li em {
+  font-style: normal;
+  font-size: 12.5px; line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+/* ── 4 · OFFER FIELD — badge left · price · CTA right ───── */
+.tv-hero-offer {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--hairline-strong, rgba(246,244,240,0.15));
+  background: rgba(10,10,11,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.tv-hero-offer .tv-hero-price {
+  border: 0; background: none; padding: 0; margin: 0;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+.tv-hero-offer .tv-btn--big { width: auto; white-space: nowrap; }
+
+/* guarantee line — fills the dead gap between price and button
+   and puts the risk-reversal exactly where the decision happens */
+.tv-hero-warranty {
+  grid-column: 1 / -1;
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-top: 8px;
+  font-family: var(--font-body);
+  font-size: 11.5px; line-height: 1.3;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+.tv-hero-warranty .tv-icon { color: var(--tv-accent); flex: none; }
+
+/* the hero paragraph sits straight on the wave — give it weight
+   and a soft ink halo so the strings stop cutting through it */
+.tv-hero-sub {
+  color: var(--fg);
+  font-size: 16px;
+  line-height: 1.62;
+  text-shadow: 0 1px 2px rgba(6,6,7,0.92), 0 2px 16px rgba(6,6,7,0.8);
+}
+
+.tv-save-badge {
+  display: inline-flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 8px 13px 7px;
+  background: var(--tv-accent);
+  color: #fff;
+  transform: rotate(-4deg);
+  box-shadow: 0 0 26px rgba(230,0,18,0.45), inset 0 0 0 1px rgba(255,255,255,0.22);
+  animation: tvBadgePulse 4.6s ease-in-out infinite;
+  will-change: transform;
+}
+.tv-save-badge .pct {
+  font-family: var(--font-display);
+  font-size: 19px; font-weight: 900; line-height: 1;
+  letter-spacing: 0.01em;
+}
+.tv-save-badge .lbl {
+  font-family: var(--font-body);
+  font-size: 8px; font-weight: 600; line-height: 1;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  margin-top: 3px; opacity: 0.92;
+}
+@keyframes tvBadgePulse {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50%      { transform: rotate(-4deg) scale(1.045); }
+}
+
+/* ── 4b · FOUNDER PHOTO (replaces the monogram plate) ──── */
+.tv-founder-photo {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--hairline-strong, rgba(246,244,240,0.15));
+  background: #0A0A0B;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+}
+/* the frame is a very dark B&W shot on a near-black page — lift the
+   midtones and warm the edge so it separates from the background */
+.tv-founder-photo img {
+  display: block;
+  width: 100%; height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: 50% 30%;
+  filter: brightness(1.12) contrast(1.08);
+}
+.tv-founder-photo {
+  box-shadow:
+    0 24px 70px rgba(0,0,0,0.55),
+    inset 0 0 90px rgba(230,0,18,0.10);
+}
+.tv-founder-monogram { display: none; }
+
+/* ── 4c · PLAN PICKER (popup) ──────────────────────────── */
+.tv-plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0 4px;
+}
+@media (max-width: 560px) {
+  .tv-plans { grid-template-columns: 1fr; }
+}
+.tv-plan {
+  position: relative;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 16px 14px;
+  text-align: left;
+  background: rgba(10,10,11,0.5);
+  border: 1px solid var(--hairline-strong, rgba(246,244,240,0.15));
+  color: inherit; cursor: pointer;
+  font-family: var(--font-body);
+  transition: border-color 260ms var(--ease-power), background 260ms var(--ease-power);
+}
+.tv-plan:hover { border-color: rgba(246,244,240,0.34); }
+.tv-plan.is-on {
+  border-color: var(--tv-accent);
+  background: rgba(230,0,18,0.07);
+  box-shadow: inset 0 0 0 1px rgba(230,0,18,0.45), 0 0 30px rgba(230,0,18,0.14);
+}
+.tv-plan:focus-visible { outline: 1px solid var(--tv-accent); outline-offset: 3px; }
+
+.tv-plan-badge {
+  position: absolute; top: -1px; right: -1px;
+  padding: 4px 9px;
+  background: var(--tv-accent); color: #fff;
+  font-size: 8.5px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.tv-plan-head { display: flex; flex-direction: column; gap: 6px; }
+.tv-plan-name {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.tv-plan-price { display: flex; align-items: baseline; gap: 9px; }
+.tv-plan-price .old {
+  font-size: 13px; color: var(--fg-faint);
+  text-decoration: line-through;
+}
+.tv-plan-price .new {
+  font-family: var(--font-display);
+  font-size: 27px; font-weight: 800; line-height: 1;
+  color: var(--fg);
+}
+.tv-plan.is-on .tv-plan-price .new { color: var(--tv-accent); }
+
+.tv-plan-perks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.tv-plan-perks li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 11.5px; line-height: 1.45;
+  color: var(--fg-muted);
+}
+.tv-plan-perks li::before {
+  content: ''; position: absolute; left: 0; top: 6px;
+  width: 5px; height: 5px; background: var(--tv-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-plan { transition: none; }
+}
+
+/* ── 5 · LOGO LOCKUP — keep ACADEMY on phones ──────────── */
+.tv-nav-bar .tv-hide-narrow.tv-logo-sub { display: inline !important; }
+@media (max-width: 719px) {
+  .tv-nav-bar .tv-logo-sub {
+    font-size: 8px !important;
+    letter-spacing: 0.16em !important;
+  }
+}
+@media (max-width: 400px) {
+  .tv-nav-bar .tv-logo-sub { letter-spacing: 0.1em !important; }
+}
+
+/* ── 6 · MOBILE FOLD ───────────────────────────────────── */
+@media (max-width: 719px) {
+  .tv-hero { padding-top: 92px; padding-bottom: 64px; }
+  .tv-hero-inner { gap: 18px; }
+  .tv-hero-main { gap: 12px; }
+  .tv-hero-wordmark { font-size: clamp(52px, 19vw, 84px); }
+  .tv-hero-headline { font-size: clamp(23px, 6.6vw, 31px); }
+  .tv-hero-sub { font-size: 13.5px; line-height: 1.55; }
+  .tv-hero-price .new { font-size: 30px; }
+
+  /* offer field stacks: badge + price on one row, CTA full-width below */
+  .tv-hero-offer {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px 14px;
+    padding: 14px;
+    /* backdrop-filter is a per-frame GPU cost; opaque scrolls cheaper */
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    background: rgba(10,10,11,0.82);
+  }
+  .tv-hero-offer .tv-btn--big { grid-column: 1 / -1; width: 100%; }
+
+  .tv-save-badge { padding: 6px 10px 5px; }
+  .tv-save-badge .pct { font-size: 15px; }
+  .tv-save-badge .lbl { font-size: 7px; letter-spacing: 0.16em; }
+
+  .tv-hero-aside { max-width: none; }
+  .tv-hero-review { padding: 14px 14px 13px; }
+  .tv-hero-review blockquote { font-size: 13.5px; }
+  .tv-hero-specs { gap: 12px; }
+  .tv-hero-specs li strong { font-size: 13px; }
+  .tv-hero-specs li em { font-size: 12px; }
+  .tv-hero-sub { font-size: 15px; }
+  .tv-hero-warranty { white-space: normal; }
+}
+
+/* ── 7 · REDUCED MOTION ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .tv-save-badge { animation: none !important; }
+}

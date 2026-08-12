@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#060607"/>
+<title>Оплату отримано — TRUE VOICE</title>
+<meta name="description" content="Оплату підтверджено. Доступ до Telegram-бота вже в дорозі."/>
+<meta name="robots" content="noindex, nofollow"/>
+
+<link rel="preload" href="fonts/stratosweb-bold-TRIAL.woff" as="font" type="font/woff" crossorigin/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="colors_and_type.css"/>
+<link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="remix.css"/>
+<link rel="stylesheet" href="pages.css"/>
+
+<style>
+  .ok-mark {
+    width: 62px; height: 62px; margin-bottom: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(230,0,18,0.55);
+    border-radius: 50%;
+    box-shadow: 0 0 34px rgba(230,0,18,0.28);
+    color: var(--tv-accent);
+  }
+  .ok-steps { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .ok-steps li {
+    display: grid; grid-template-columns: 26px minmax(0, 1fr);
+    gap: 12px; align-items: start;
+  }
+  .ok-steps .n {
+    font-family: var(--font-display); font-weight: 800; font-size: 13px;
+    color: var(--tv-accent); padding-top: 2px;
+  }
+  .upsell { margin-top: 44px; }
+  .upsell-card {
+    border: 1px solid rgba(246,244,240,0.15);
+    border-left: 2px solid var(--tv-accent);
+    background: rgba(12,12,14,0.62);
+    padding: 24px 26px;
+  }
+  .upsell-price { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 14px; }
+  .upsell-price .new {
+    font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1;
+    color: var(--tv-accent);
+  }
+  .upsell-price .note { font-family: var(--font-body); font-size: 12px; color: var(--fg-faint); }
+  .upsell ul { list-style: none; margin: 0 0 4px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .upsell ul li { position: relative; padding-left: 16px; font-size: 13.5px; color: var(--fg-muted); }
+  .upsell ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; background: var(--tv-accent); }
+  .upsell-msg { margin-top: 14px; font-family: var(--font-body); font-size: 13px; color: var(--fg-muted); }
+</style>
+</head>
+<body>
+
+<header class="pg-nav">
+  <a class="pg-logo" href="/">
+    <img src="assets/logo-monogram.svg" width="24" height="24" alt=""/>
+    <span class="name">TRUE VOICE</span>
+    <span class="sub">/ Academy</span>
+  </a>
+  <a class="pg-nav-cta" href="https://t.me/truevoice_official" target="_blank" rel="noopener noreferrer">Telegram-канал →</a>
+</header>
+
+<main class="pg-wrap pg-wrap--narrow">
+  <span class="ok-mark" aria-hidden="true">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m4.5 12.5 5 5 10-11"/>
+    </svg>
+  </span>
+
+  <span class="pg-eyebrow"><span class="dot"></span>Оплату отримано</span>
+  <h1 class="pg-title">Готово.<br/>Перевір пошту.</h1>
+  <p class="pg-sub">
+    Лист із посиланням на Telegram-бот прийде протягом кількох хвилин.
+    Якщо його немає — подивись у «Промоакції» та «Спам».
+  </p>
+
+  <ol class="ok-steps">
+    <li><span class="n">01</span><span>Відкрий лист і перейди за посиланням у Telegram-бот.</span></li>
+    <li><span class="n">02</span><span>Натисни «Старт» — перший урок відкриється одразу.</span></li>
+    <li><span class="n">03</span><span>Виділи 15–20 хвилин у тихому місці. Навушники бажані.</span></li>
+  </ol>
+
+  <!-- upgrade path for BASE buyers; PRO buyers land here with ?plan=pro -->
+  <section class="upsell" id="upgrade" hidden>
+    <span class="pg-eyebrow"><span class="dot"></span>Можна додати зараз</span>
+    <h2 class="pg-h2" style="margin-top:14px">Додати групову сесію</h2>
+    <div class="upsell-card">
+      <p style="margin-bottom:10px">
+        Курс ти вже маєш. Група — це те, чого немає в записі: свій випадок,
+        свої питання, відповідь наживо.
+      </p>
+      <div class="upsell-price">
+        <span class="new">+$10</span>
+        <span class="note">замість $25 при купівлі окремо</span>
+      </div>
+      <ul>
+        <li>Групова Q&amp;A-сесія наживо з Романом</li>
+        <li>Запис сесії + розбір типових питань</li>
+        <li>Бонусні протоколи: перед виступом, після стресу, зранку</li>
+      </ul>
+      <div class="pg-actions">
+        <button class="pg-btn" id="upgrade-btn" type="button">Додати за&nbsp;$10 →</button>
+        <a class="pg-btn pg-btn--ghost" href="/">Поки що ні</a>
+      </div>
+      <p class="upsell-msg" id="upgrade-msg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <div class="pg-actions" style="margin-top:34px">
+    <a class="pg-btn pg-btn--ghost" href="/">На головну</a>
+  </div>
+
+  <div class="pg-foot">
+    <span>© 2026 · TRUE VOICE</span>
+    <a href="offer">Публічна оферта</a>
+    <a href="privacy">Політика конфіденційності</a>
+    <a href="mailto:roman.semenchuk@gmail.com">roman.semenchuk@gmail.com</a>
+  </div>
+</main>
+
+<script src="https://secure.wayforpay.com/server/pay-widget.js"></script>
+<script>
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var plan = params.get('plan') || 'base';
+    var email = params.get('email') || '';
+    var phone = params.get('phone') || '';
+
+    // the upgrade only makes sense for people who bought the base package
+    var block = document.getElementById('upgrade');
+    if (plan !== 'pro' && plan !== 'upgrade') block.hidden = false;
+
+    var btn = document.getElementById('upgrade-btn');
+    var msg = document.getElementById('upgrade-msg');
+
+    btn.addEventListener('click', function () {
+      if (!email || !phone) {
+        // we do not have the buyer's details in the URL — ask instead of guessing
+        msg.textContent = 'Напиши нам на roman.semenchuk@gmail.com з темою «Апгрейд» — надішлемо посилання на доплату.';
+        return;
+      }
+      btn.disabled = true;
+      msg.textContent = 'Готуємо оплату…';
+
+      fetch('/api/wayforpay-create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, phone: phone, plan: 'upgrade' })
+      })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw j; return j; }); })
+        .then(function (order) {
+          if (!window.Wayforpay) throw new Error('widget_missing');
+          msg.textContent = '';
+          new window.Wayforpay().run(
+            order,
+            function () {
+              if (window.fbq) window.fbq('track', 'Purchase', { value: order.amount, currency: order.currency, content_name: 'TrueVoice upgrade' });
+              block.innerHTML = '<span class="pg-eyebrow"><span class="dot"></span>Апгрейд підтверджено</span>'
+                + '<h2 class="pg-h2" style="margin-top:14px">Місце в групі за тобою.</h2>'
+                + '<p>Деталі сесії надішлемо на пошту та в бот.</p>';
+            },
+            function () { btn.disabled = false; msg.textContent = 'Оплату відхилено. Спробуй іншу картку.'; },
+            function () { msg.textContent = 'Оплата обробляється — щойно банк підтвердить, ми напишемо.'; }
+          );
+        })
+        .catch(function () {
+          btn.disabled = false;
+          msg.textContent = 'Не вдалося відкрити оплату. Напиши нам на roman.semenchuk@gmail.com — підключимо вручну.';
+        });
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+/* =========================================================
+   TRUE VOICE — STANDALONE PAGES SHELL
+   Shared by offer.html, privacy.html, success.html, fail.html.
+   One header lockup, one type scale, one footer — so the legal
+   and post-payment pages cannot drift from the landing.
+   ========================================================= */
+
+html, body { background: #060607; }
+body { margin: 0; }
+
+/* ── header: same lockup as the landing nav ─────────────── */
+.pg-nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(20px, 5vw, 40px);
+  background: rgba(6,6,7,0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(246,244,240,0.08);
+}
+.pg-logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.pg-logo img { display: block; width: 24px; height: 24px; }
+.pg-logo .name {
+  font-family: var(--font-display);
+  font-weight: 800; font-size: 14px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--fg);
+}
+.pg-logo .sub {
+  font-family: var(--font-body);
+  font-size: 9px; font-weight: 500;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--fg-faint);
+}
+@media (max-width: 400px) {
+  .pg-logo .sub { letter-spacing: 0.12em; font-size: 8px; }
+}
+.pg-nav-cta {
+  font-family: var(--font-body);
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--fg); text-decoration: none;
+  padding: 10px 14px; min-height: 40px;
+  display: inline-flex; align-items: center;
+  background: var(--tv-accent);
+  box-shadow: 0 0 24px var(--tv-accent-glow);
+  white-space: nowrap;
+}
+
+/* ── page body ──────────────────────────────────────────── */
+.pg-wrap {
+  max-width: 78ch;
+  margin: 0 auto;
+  padding: clamp(48px, 7vw, 88px) clamp(20px, 5vw, 40px) clamp(72px, 9vw, 110px);
+}
+.pg-wrap--narrow { max-width: 62ch; }
+
+.pg-eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--tv-accent);
+}
+.pg-eyebrow .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--tv-accent);
+  box-shadow: 0 0 12px rgba(230,0,18,0.8);
+}
+
+h1.pg-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(32px, 5.6vw, 58px);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin: 16px 0 12px;
+  overflow-wrap: break-word;
+}
+.pg-sub {
+  font-family: var(--font-body);
+  font-size: 15.5px; line-height: 1.62;
+  color: var(--fg-muted);
+  max-width: 58ch;
+  margin: 0 0 10px;
+}
+.pg-meta {
+  font-family: var(--font-body);
+  font-size: 12px; letter-spacing: 0.04em;
+  color: var(--fg-faint);
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(246,244,240,0.12);
+  margin-bottom: 38px;
+}
+
+h2.pg-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(19px, 2.4vw, 25px);
+  line-height: 1.22;
+  color: var(--fg);
+  margin: 44px 0 14px;
+  scroll-margin-top: 84px;      /* sticky header clearance for anchors */
+  overflow-wrap: break-word;
+}
+h2.pg-h2 .n { color: var(--tv-accent); margin-right: 10px; font-size: 0.78em; }
+
+.pg-wrap p, .pg-wrap li {
+  font-family: var(--font-body);
+  font-size: 15px; line-height: 1.72;
+  color: var(--fg-muted);
+}
+.pg-wrap p { margin: 0 0 13px; }
+.pg-wrap ul { margin: 0 0 13px; padding-left: 20px; }
+.pg-wrap li { margin-bottom: 7px; }
+.pg-wrap strong { color: var(--fg); font-weight: 600; }
+.pg-wrap a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: break-word; }
+.pg-wrap a:hover { color: var(--tv-accent); }
+
+/* ── shared blocks ──────────────────────────────────────── */
+.pg-callout {
+  border: 1px solid rgba(246,244,240,0.15);
+  border-left: 2px solid var(--tv-accent);
+  background: rgba(12,12,14,0.6);
+  padding: 20px 22px;
+  margin: 22px 0 26px;
+}
+.pg-callout p:last-child { margin-bottom: 0; }
+
+.pg-req {
+  border: 1px solid rgba(246,244,240,0.15);
+  background: rgba(12,12,14,0.6);
+  padding: 22px 24px;
+  margin-top: 22px;
+}
+.pg-req dl { margin: 0; display: grid; grid-template-columns: minmax(120px, auto) 1fr; gap: 9px 18px; }
+.pg-req dt {
+  font-family: var(--font-body); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-faint);
+  padding-top: 3px;
+}
+.pg-req dd { margin: 0; font-family: var(--font-body); font-size: 14.5px; line-height: 1.5; color: var(--fg); overflow-wrap: break-word; }
+@media (max-width: 560px) {
+  .pg-req dl { grid-template-columns: 1fr; gap: 3px; }
+  .pg-req dd { margin-bottom: 12px; }
+}
+
+.pg-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 15px 26px;
+  font-family: var(--font-body);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--fg); text-decoration: none;
+  background: var(--tv-accent);
+  border: 0; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 0 28px rgba(230,0,18,0.22);
+  transition: box-shadow 320ms ease, transform 200ms ease;
+}
+.pg-btn:hover { box-shadow: inset 0 0 0 1px rgba(230,0,18,0.7), 0 0 30px rgba(230,0,18,0.3); }
+.pg-btn:active { transform: translateY(1px); }
+.pg-btn--ghost {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(246,244,240,0.22);
+  color: var(--fg-muted);
+}
+.pg-btn--ghost:hover { box-shadow: inset 0 0 0 1px rgba(246,244,240,0.45); color: var(--fg); }
+.pg-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+@media (max-width: 560px) {
+  .pg-actions { flex-direction: column; }
+  .pg-btn { width: 100%; }
+}
+
+/* ── footer ─────────────────────────────────────────────── */
+.pg-foot {
+  margin-top: 56px; padding-top: 26px;
+  border-top: 1px solid rgba(246,244,240,0.12);
+  display: flex; flex-wrap: wrap; gap: 12px 26px;
+  font-family: var(--font-body); font-size: 11.5px;
+  color: var(--fg-faint);
+}
+.pg-foot a { color: var(--fg-muted); text-decoration: none; }
+.pg-foot a:hover { color: var(--fg); }
+
+:focus-visible { outline: 1px solid var(--tv-accent); outline-offset: 3px; }

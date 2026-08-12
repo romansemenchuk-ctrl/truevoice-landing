@@ -73,8 +73,9 @@ function KineticEffects() {
       };
     }
 
-    /* ---- parallax targets ---- */
+    /* ---- parallax targets (lerped for smoothness) ---- */
     const parallax = Array.from(document.querySelectorAll('[data-parallax]'));
+    const parallaxCur = new Map();
 
     /* ---- reveal targets (scroll-sweep, jump-safe) ---- */
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -112,42 +113,74 @@ function KineticEffects() {
       }
     }
 
-    /* ---- scroll loop ---- */
+    /* ---- scroll loop ----
+       Perf contract for this loop:
+       · layout is READ only when the scroll position actually changed
+         (reading rects every frame forced ~100 reflows/s and was what
+          made the custom cursor stutter);
+       · reads and writes are batched into separate passes so we never
+         thrash layout inside the same frame;
+       · when nothing moves the loop costs one comparison per frame. */
     let scrollY = window.scrollY || 0;
-    function onScroll() { scrollY = window.scrollY || 0; sweepReveal(); }
+    let scrollDirty = true;
+    let parallaxSettling = true;
+    const rects = new Array(parallax.length);
+
+    function onScroll() { scrollY = window.scrollY || 0; scrollDirty = true; }
+    function onResize() { scrollDirty = true; }
     sweepReveal();
     setTimeout(sweepReveal, 60);
-    function loop() {
-      sweepReveal();
-      const doc = document.documentElement;
-      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
-      const p = Math.min(1, Math.max(0, scrollY / max));
-      docEl.style.setProperty('--kx-p', p.toFixed(4));
 
-      // parallax (relative to viewport center)
-      const vh = window.innerHeight;
-      for (const el of parallax) {
-        const speed = parseFloat(el.getAttribute('data-parallax')) || 0.2;
-        const r = el.getBoundingClientRect();
-        const center = r.top + r.height / 2 - vh / 2;
-        el.style.transform = `translate3d(0, ${(-center * speed).toFixed(1)}px, 0)`;
+    function loop() {
+      if (scrollDirty) {
+        sweepReveal();
+        const doc = document.documentElement;
+        const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+        const p = Math.min(1, Math.max(0, scrollY / max));
+        docEl.style.setProperty('--kx-p', p.toFixed(4));
       }
 
-      // cursor lerp
-      if (cursor) {
+      /* parallax — keeps easing after the scroll stops, then idles */
+      if (parallax.length && (scrollDirty || parallaxSettling)) {
+        const vh = window.innerHeight;
+        // pass 1: read every rect (no writes in between)
+        for (let i = 0; i < parallax.length; i++) rects[i] = parallax[i].getBoundingClientRect();
+        // pass 2: write every transform
+        let moving = false;
+        for (let i = 0; i < parallax.length; i++) {
+          const el = parallax[i];
+          const speed = parseFloat(el.getAttribute('data-parallax')) || 0.2;
+          const prev = parallaxCur.get(el) || 0;
+          const r = rects[i];
+          const center = (r.top - prev) + r.height / 2 - vh / 2;
+          const target = -center * speed;
+          const cur = parallaxCur.has(el) ? prev + (target - prev) * 0.12 : target;
+          parallaxCur.set(el, cur);
+          if (Math.abs(target - cur) > 0.15) moving = true;
+          el.style.transform = `translate3d(0, ${cur.toFixed(1)}px, 0)`;
+        }
+        parallaxSettling = moving;
+      }
+
+      scrollDirty = false;
+
+      // cursor lerp — only while it is actually catching up
+      if (cursor && (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1)) {
         cx += (tx - cx) * 0.22;
         cy += (ty - cy) * 0.22;
-        cursor.style.transform = `translate(${cx.toFixed(1)}px, ${cy.toFixed(1)}px) translate(-50%,-50%)`;
+        cursor.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0) translate(-50%,-50%)`;
       }
 
       rafRef.current = requestAnimationFrame(loop);
     }
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
     rafRef.current = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
       if (window.__kxCursorCleanup) window.__kxCursorCleanup();
       bar.remove();
       if (cursor) cursor.remove();

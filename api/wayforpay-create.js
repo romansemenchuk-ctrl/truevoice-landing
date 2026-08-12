@@ -72,11 +72,34 @@ module.exports = async (req, res) => {
   const clientFirstName = cap(nameParts[0]) || 'Client';
   const clientLastName = nameParts.length > 1 ? nameParts.slice(1).map(cap).join(' ') : 'TrueVoice';
 
-  const productName = process.env.PRODUCT_NAME || 'TrueVoice Mini — 7 днів до живого звучання';
-  const currency = process.env.PRODUCT_CURRENCY || 'USD';
-  const amount = Number(process.env.PRODUCT_PRICE || 15);
+  // Prices live here, never in the browser: the client only names a plan.
+  // Trusting a price from the request body would let anyone pay $0.01.
+  const PLANS = {
+    base: {
+      price: Number(process.env.PRICE_BASE || 15),
+      name: process.env.PRODUCT_NAME || 'TrueVoice 7D — 7 днів до живого звучання',
+    },
+    pro: {
+      price: Number(process.env.PRICE_PRO || 25),
+      name: 'TrueVoice 7D max — курс + групова Q&A-сесія',
+    },
+    // paid after the fact by BASE buyers who want the group session
+    upgrade: {
+      price: Number(process.env.PRICE_UPGRADE || 10),
+      name: 'TrueVoice — апгрейд до 7D max',
+    },
+  };
 
-  const orderReference = `tv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const planKey = Object.prototype.hasOwnProperty.call(PLANS, body.plan) ? body.plan : 'base';
+  const plan = PLANS[planKey];
+
+  const productName = plan.name;
+  const currency = process.env.PRODUCT_CURRENCY || 'USD';
+  const amount = plan.price;
+
+  // plan is encoded in the reference so the payment webhook can tell
+  // which package to unlock without a second lookup
+  const orderReference = `tv-${planKey}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const orderDate = Math.floor(Date.now() / 1000);
 
   const productNameArr = [productName];
@@ -117,5 +140,6 @@ module.exports = async (req, res) => {
     clientFirstName,
     clientLastName,
     language: 'UA',
+    plan: planKey,
   });
 };

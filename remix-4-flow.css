@@ -1,0 +1,100 @@
+/* =========================================================
+   TRUE VOICE — REMIX · FLOW LAYER
+   Плавність · пульсація · простір.
+   Working with remix-4-flow.js (injected elements + loop).
+   ========================================================= */
+
+/* ── ПРОСТІР — більше повітря на десктопі ─────────────── */
+@media (min-width: 900px) {
+  :root { --sect-y: clamp(130px, 13vw, 200px); }
+  .tv-hero { padding-bottom: 90px; }
+
+  /* fold discipline: headline → price → CTA must land in ~900px */
+  .tv-hero { padding-top: 104px; }
+  .tv-hero-wordmark { font-size: clamp(72px, 11.5vw, 168px); }
+  .tv-hero-headline { font-size: clamp(34px, 3.4vw, 50px); max-width: 22ch; }
+  .tv-hero-sub { max-width: 56ch; }
+  .tv-hero-inner { gap: 14px; }
+  .tv-hero-price { padding: 14px 20px; margin-top: 8px; }
+  .tv-hero-price .new { font-size: clamp(30px, 2.8vw, 40px); }
+  .tv-hero-ctas { margin-top: 6px; }
+}
+
+/* ── ДИХАННЯ — спільний ритм 4.6s (спокійний вдих-видих) ── */
+.flow-breath {
+  position: absolute; inset: -10%;
+  pointer-events: none; z-index: 1;
+  background: radial-gradient(58% 44% at 50% 46%, rgba(230,0,18,0.10), transparent 65%);
+  mix-blend-mode: screen;
+  animation: flowBreathe 4.6s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+@keyframes flowBreathe {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.045); }
+}
+
+/* сигнальні крапки дихають у тому ж ритмі */
+.tv-pill .dot, .tv-eyebrow > .dot { animation-duration: 4.6s; }
+
+/* CTA — живий glow, не блимання */
+.tv-btn--big {
+  animation: flowGlow 4.6s ease-in-out infinite;
+}
+@keyframes flowGlow {
+  0%, 100% { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 0 22px rgba(230,0,18,0.18); }
+  50%      { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 0 44px rgba(230,0,18,0.34); }
+}
+.tv-btn--big:hover { animation-play-state: paused; }
+
+/* countdown — м'який пульс двокрапок */
+.cd-sep { animation: flowSep 1s ease-in-out infinite; }
+@keyframes flowSep {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+/* ── ГЛИБИНА — секції випливають з простору ───────────── */
+.flow-depth {
+  opacity: 0.001;
+  transform: scale(0.985) translateY(14px);
+  transform-origin: 50% 80%;
+  transition:
+    opacity 1100ms var(--ease-power),
+    transform 1100ms var(--ease-power);
+  will-change: opacity, transform;
+}
+.flow-depth.flow-in { opacity: 1; transform: none; }
+
+/* marquee-стрічки: плавний в'їзд при появі */
+.kx-band .kx-marquee {
+  opacity: 0;
+  transition: opacity 1400ms var(--ease-power);
+}
+.kx-band.flow-band-in .kx-marquee { opacity: 1; }
+
+/* ── СВІТЛОВИЙ ГОРИЗОНТ — слідує за скролом з лагом ────── */
+/* Driven by a transform, not by re-generating the gradient every frame:
+   animating the gradient position repainted the whole viewport each rAF. */
+.flow-horizon {
+  position: fixed; inset: -20% 0;
+  pointer-events: none; z-index: 1;
+  background: radial-gradient(
+    64% 26% at 50% 50%,
+    rgba(230,0,18,0.045), transparent 70%
+  );
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+/* ── GUARDS ────────────────────────────────────────────── */
+@media (max-width: 719px) {
+  .flow-horizon { display: none; }
+  .flow-breath { animation-duration: 5.4s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-breath, .tv-btn--big, .cd-sep { animation: none !important; }
+  .flow-depth { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .kx-band .kx-marquee { opacity: 1 !important; }
+  .flow-horizon { display: none; }
+}

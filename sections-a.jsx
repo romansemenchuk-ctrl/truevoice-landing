@@ -107,7 +107,7 @@ function Nav({ onApply }) {
               fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase',
               color: 'var(--fg)'
             }}>TRUE VOICE</span>
-            <span className="tv-hide-narrow" style={{
+            <span className="tv-hide-narrow tv-logo-sub" style={{
               fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 500,
               letterSpacing: '0.30em', textTransform: 'uppercase', color: 'var(--fg-faint)'
             }}>/ Academy</span>
@@ -139,7 +139,7 @@ function Nav({ onApply }) {
                 boxShadow: '0 0 24px var(--tv-accent-glow)',
                 cursor: 'pointer'
               }}>
-              від&nbsp;15$&nbsp;→
+              всього&nbsp;$15&nbsp;→
             </button>
             <button
               className={`tv-burger ${open ? 'is-open' : ''}`}
@@ -166,7 +166,7 @@ function Nav({ onApply }) {
         </ol>
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 18, paddingTop: 32 }}>
           <button className="tv-btn" onClick={() => {onApply && onApply();setOpen(false);}}>
-            Забрати від 15$ <span className="arrow">→</span>
+            Забрати всього за $15 <span className="arrow">→</span>
           </button>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10,
@@ -306,11 +306,11 @@ function Hero({ onApply, motion = 'cinematic' }) {
         </h1>
 
         <p className="tv-hero-sub tv-reveal" style={{ animationDelay: '220ms' }}>
-          7 практик по 20–30 хвилин через Telegram-бот відновлюють дихання, розслабляють тіло і повертають голосу природну силу.
+          7 практик по 15–20 хвилин через Telegram-бот відновлюють дихання, розслабляють тіло і повертають голосу природну силу.
         </p>
 
         <div className="tv-hero-price tv-reveal" style={{ animationDelay: '300ms' }}>
-          <span className="old">45&nbsp;$</span>
+          <span className="old">100&nbsp;$</span>
           <span className="arr">→</span>
           <span className="new">15&nbsp;$</span>
           <span className="til">7 місяців доступу</span>
@@ -318,7 +318,7 @@ function Hero({ onApply, motion = 'cinematic' }) {
 
         <div className="tv-hero-ctas tv-reveal" style={{ animationDelay: '360ms' }}>
           <button className="tv-btn tv-btn--big" onClick={onApply}>
-            Забрати від&nbsp;15$ <span className="arrow">→</span>
+            Забрати всього за&nbsp;$15 <span className="arrow">→</span>
           </button>
           <span className="tv-hero-trust">
             <span className="tv-hero-trust-mark">★★★★★</span>

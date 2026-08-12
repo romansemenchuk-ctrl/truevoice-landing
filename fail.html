@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#060607"/>
+<title>Оплата не пройшла — TRUE VOICE</title>
+<meta name="description" content="Оплата не пройшла. Гроші лишились на картці — спробуй ще раз."/>
+<meta name="robots" content="noindex, nofollow"/>
+
+<link rel="preload" href="fonts/stratosweb-bold-TRIAL.woff" as="font" type="font/woff" crossorigin/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="colors_and_type.css"/>
+<link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="remix.css"/>
+<link rel="stylesheet" href="pages.css"/>
+
+<style>
+  .no-mark {
+    width: 62px; height: 62px; margin-bottom: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(246,244,240,0.28);
+    border-radius: 50%;
+    color: var(--fg-muted);
+  }
+  .why { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .why li {
+    display: grid; grid-template-columns: 8px minmax(0, 1fr);
+    gap: 13px; align-items: start;
+    font-family: var(--font-body); font-size: 14.5px; line-height: 1.6;
+    color: var(--fg-muted);
+  }
+  .why li::before { content: ''; width: 6px; height: 6px; margin-top: 8px; background: var(--tv-accent); }
+</style>
+</head>
+<body>
+
+<header class="pg-nav">
+  <a class="pg-logo" href="/">
+    <img src="assets/logo-monogram.svg" width="24" height="24" alt=""/>
+    <span class="name">TRUE VOICE</span>
+    <span class="sub">/ Academy</span>
+  </a>
+  <a class="pg-nav-cta" href="/#apply">Спробувати ще раз →</a>
+</header>
+
+<main class="pg-wrap pg-wrap--narrow">
+  <span class="no-mark" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="1.8" stroke-linecap="round">
+      <path d="m7 7 10 10M17 7 7 17"/>
+    </svg>
+  </span>
+
+  <span class="pg-eyebrow"><span class="dot"></span>Оплата не пройшла</span>
+  <h1 class="pg-title">Гроші лишились<br/>на картці.</h1>
+  <p class="pg-sub">
+    Платіж не завершився, тож нічого не списано. Найчастіше це дрібниця,
+    яка вирішується з другої спроби.
+  </p>
+
+  <ul class="why">
+    <li>Банк не підтвердив 3D Secure — перевір повідомлення в банківському застосунку.</li>
+    <li>Картка не підтримує інтернет-платежі або платежі в іноземній валюті.</li>
+    <li>Недостатньо коштів або спрацював добовий ліміт.</li>
+    <li>Вікно оплати закрилося раніше, ніж прийшло підтвердження.</li>
+  </ul>
+
+  <div class="pg-actions">
+    <a class="pg-btn" href="/#apply">Спробувати ще раз →</a>
+    <a class="pg-btn pg-btn--ghost" href="mailto:roman.semenchuk@gmail.com?subject=Проблема%20з%20оплатою">Написати нам</a>
+  </div>
+
+  <p style="margin-top:26px; font-family:var(--font-body); font-size:13.5px; color:var(--fg-faint)">
+    Якщо не виходить і з другого разу — напиши на
+    <a href="mailto:roman.semenchuk@gmail.com" style="color:var(--fg-muted)">roman.semenchuk@gmail.com</a>,
+    підключимо доступ вручну.
+  </p>
+
+  <div class="pg-foot">
+    <span>© 2026 · TRUE VOICE</span>
+    <a href="/">На головну</a>
+    <a href="offer">Публічна оферта</a>
+    <a href="privacy">Політика конфіденційності</a>
+  </div>
+</main>
+
+</body>
+</html>

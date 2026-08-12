@@ -5,7 +5,7 @@
    New HeroRemix + KineticBand interludes + global FX.
    ========================================================= */
 
-const { useState: useRxState, useEffect: useRxEffect, useCallback: useRxCb } = React;
+const { useState: useRxState, useEffect: useRxEffect, useCallback: useRxCb, useRef: useRxRef } = React;
 
 const RX_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "#E60012",
@@ -24,6 +24,88 @@ function rxGlow(hex, a) {
   const b = parseInt(h.length === 3 ? h[2]+h[2] : h.slice(4,6), 16);
   return `rgba(${r},${g},${b},${a})`;
 }
+
+/* ---------- icons — one family: 24-grid, 1.5 stroke, round caps ---------- */
+const TV_ICON_PATHS = {
+  // waveform pulse — "you hear the change"
+  pulse:   <><path d="M2 12h3.2l2.4-7 3.4 14 2.8-9.5 2 5H22"/></>,
+  // feather — "nothing to learn, it stays light"
+  feather: <><path d="M20.2 3.8c-3.6-2-9 .4-11.6 3-2.2 2.2-2.8 5.2-2 7.6L3 20l5.6-3.6c2.4.8 5.4.2 7.6-2 2.6-2.6 5-8 4-10.6Z"/><path d="M8.6 16.4 16 9"/></>,
+  // microphone — "proven on stage"
+  mic:     <><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21m-3 0h6"/></>,
+  play:    <><path d="M8 5.2 19 12 8 18.8V5.2Z"/></>,
+  shield:  <><path d="M12 2.8 4.5 6v6c0 4.2 3 7.4 7.5 9.2 4.5-1.8 7.5-5 7.5-9.2V6L12 2.8Z"/><path d="m8.8 12 2.3 2.3 4.1-4.6"/></>,
+};
+
+function TvIcon({ name, size = 20 }) {
+  const d = TV_ICON_PATHS[name];
+  if (!d) return null;
+  return (
+    <svg className="tv-icon" width={size} height={size} viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="1.5"
+      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+      {d}
+    </svg>
+  );
+}
+window.TvIcon = TvIcon;
+
+/* ---------- hero intro clip ----------
+   It is a minute of Roman talking to camera, so it does NOT autoplay:
+   a muted looping monologue reads as broken. The poster shows until
+   the viewer chooses to watch, then it plays with sound and controls.
+   If assets/intro.mp4 is missing, onError swaps in the stage still. */
+function HeroIntro() {
+  const [failed, setFailed] = useRxState(false);
+  const [playing, setPlaying] = useRxState(false);
+  const ref = useRxRef(null);
+
+  const start = useRxCb(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = false;
+    v.play().then(() => setPlaying(true)).catch(() => {
+      // some browsers refuse unmuted playback — fall back to muted
+      v.muted = true;
+      v.play().then(() => setPlaying(true)).catch(() => {});
+    });
+  }, []);
+
+  if (failed) {
+    return (
+      <img
+        src="assets/roman-stage.jpg"
+        alt="Роман Семенчук співає на сцені"
+        width="1440" height="990"
+        loading="eager" decoding="async" />
+    );
+  }
+
+  return (
+    <>
+      <video
+        ref={ref}
+        className={`tv-hero-video ${playing ? 'is-playing' : ''}`}
+        src="assets/intro.mp4"
+        poster="assets/intro-poster.jpg"
+        width="1100" height="623"
+        playsInline preload="none"
+        controls={playing}
+        onEnded={() => setPlaying(false)}
+        onError={() => setFailed(true)}
+        aria-label="Інтро: Роман Семенчук про TrueVoice" />
+      {!playing && (
+        <button type="button" className="tv-hero-play" onClick={start}>
+          <span className="ring" aria-hidden="true">
+            <window.TvIcon name="play" size={18} />
+          </span>
+          <span className="lbl">Дивитись інтро<span className="dur"> · 0:57</span></span>
+        </button>
+      )}
+    </>
+  );
+}
+window.HeroIntro = HeroIntro;
 
 /* ---------- HERO (remix) — preserves all original text ---------- */
 function HeroRemix({ onApply, motion = 'wall', accent = '#E60012' }) {
@@ -47,6 +129,7 @@ function HeroRemix({ onApply, motion = 'wall', accent = '#E60012' }) {
       <div className="hx-ghost" data-parallax="0.22" aria-hidden="true">ГОЛОС</div>
 
       <div className="tv-hero-inner">
+       <div className="tv-hero-main">
         <div className="tv-hero-meta tv-reveal">
           <span className="tv-pill">Онлайн-курс від Романа Семенчука</span>
           <span className="tv-pill tv-pill--accent"><span className="dot" />Старт {label}</span>
@@ -63,32 +146,67 @@ function HeroRemix({ onApply, motion = 'wall', accent = '#E60012' }) {
         </h1>
 
         <p className="tv-hero-sub tv-reveal" style={{ animationDelay: '240ms' }}>
-          7 практик по 20–30 хвилин через Telegram-бот відновлюють дихання, розслабляють тіло і повертають голосу природну силу.
+          7 практик по 15–20 хвилин через Telegram-бот відновлюють дихання, розслабляють тіло і повертають голосу природну силу.
         </p>
 
-        <div className="tv-hero-price tv-reveal" style={{ animationDelay: '300ms' }}>
-          <span className="old">45&nbsp;$</span>
-          <span className="arr">→</span>
-          <span className="new">15&nbsp;$</span>
-          <span className="til">7 місяців доступу</span>
-        </div>
-
-        <div className="tv-hero-ctas tv-reveal" style={{ animationDelay: '360ms' }}>
-          <button className="tv-btn tv-btn--big" onClick={onApply}>
-            Забрати від&nbsp;15$ <span className="arrow">→</span>
-          </button>
-          <span className="tv-hero-trust">
-            <span className="tv-hero-trust-mark" style={{ color: 'var(--tv-accent)' }}>★★★★★</span>
-            Віктор Терент’єв, бізнес-коуч —<br className="tv-hide-narrow" />
-            <em>«На 3–4 день почала відпускати щелепа, голос став нижчим і теплішим».</em>
+        {/* offer field: badge left · price centre · CTA right */}
+        <div className="tv-hero-offer tv-reveal" style={{ animationDelay: '300ms' }}>
+          <span className="tv-save-badge" aria-label="Знижка 85 відсотків">
+            <span className="pct">−85%</span>
+            <span className="lbl">знижка</span>
           </span>
-        </div>
 
-        <ul className="tv-hero-bullets tv-reveal" style={{ animationDelay: '440ms' }}>
-          <li><span className="b" />Перші зміни <strong>після першої практики</strong></li>
-          <li><span className="b" />Без музичної освіти і складної теорії</li>
-          <li><span className="b" />30+ років сценічного досвіду · 1000+ концертів</li>
+          <div className="tv-hero-price">
+            <span className="old">100&nbsp;$</span>
+            <span className="arr">→</span>
+            <span className="new">15&nbsp;$</span>
+            <span className="til">7 місяців доступу</span>
+            <span className="tv-hero-warranty">
+              <window.TvIcon name="shield" size={14} />
+              14 днів гарантії повернення
+            </span>
+          </div>
+
+          <button className="tv-btn tv-btn--big" onClick={onApply}>
+            Забрати всього за&nbsp;$15 <span className="arrow">→</span>
+          </button>
+        </div>
+       </div>
+
+       <aside className="tv-hero-aside tv-reveal" style={{ animationDelay: '440ms' }}>
+        <figure className="tv-hero-shot">
+          <window.HeroIntro />
+        </figure>
+
+        {/* review lives below the frame now — nothing sits on the video */}
+        <figure className="tv-hero-review">
+          <figcaption className="tv-hero-review-tag">
+            <span className="dot" />Відгук учасника
+          </figcaption>
+          <blockquote>
+            «На 3–4 день почала відпускати щелепа, голос став нижчим і теплішим».
+          </blockquote>
+          <cite>Віктор Терент’єв <span>· бізнес-коуч</span></cite>
+        </figure>
+
+        <ul className="tv-hero-specs">
+          <li>
+            <window.TvIcon name="pulse" />
+            <strong>Перші зміни — вже після першої практики</strong>
+            <em>Не через місяць. Сьогодні ввечері.</em>
+          </li>
+          <li>
+            <window.TvIcon name="feather" />
+            <strong>Вміти співати не треба</strong>
+            <em>Без нот, вокальної теорії та музичної освіти.</em>
+          </li>
+          <li>
+            <window.TvIcon name="mic" />
+            <strong>Метод перевірений сценою</strong>
+            <em>30+ років досвіду, 1000+ живих виступів.</em>
+          </li>
         </ul>
+       </aside>
       </div>
 
       <div className="tv-hero-tape" aria-hidden="true">

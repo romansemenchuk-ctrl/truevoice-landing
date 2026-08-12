@@ -169,12 +169,17 @@ function VoiceDrift({ accent = '#C8102E', enabled = true }) {
   );
 }
 
-/* ── StarField: три шари зірок з паралаксом на скролі ────── */
+/* ── StarField: три шари зірок з паралаксом на скролі ──────
+   Perf note: the first version drew ~385 arc() paths (x3 wrapped
+   copies) every frame — over a thousand path ops per frame, which
+   is what made the cursor and scroll stutter. Each layer is now
+   pre-rendered once into an offscreen sprite; a frame costs a
+   handful of drawImage calls. Twinkle survives by crossfading two
+   pre-baked alpha phases, and the scroll offset is eased so the
+   parallax reads as fluid rather than locked to the wheel. */
 function StarField({ enabled = true }) {
   const canvasRef = useAmbRef(null);
   const rafRef    = useAmbRef(0);
-  const scrollRef = useAmbRef(0);
-  const starsRef  = useAmbRef(null);
 
   useAmbEff(() => {
     if (!enabled) return;
@@ -184,74 +189,94 @@ function StarField({ enabled = true }) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let W = 0, H = 0, DPR = 1;
+    let sprites = [];            // [{a, b}] offscreen canvases per layer
+    let targetScroll = 0, easedScroll = 0;
+    let running = false;
 
-    // Три шари: far · mid · near (швидкість паралаксу різна)
     const LAYERS = [
-      { count: 220, minR: 0.3, maxR: 0.7,  baseA: 0.60, parallax: 0.04 }, // далеко
-      { count: 110, minR: 0.6, maxR: 1.1,  baseA: 0.45, parallax: 0.10 }, // середньо
-      { count:  55, minR: 0.9, maxR: 1.6,  baseA: 0.35, parallax: 0.20 }, // близько
+      { count: 220, minR: 0.3, maxR: 0.7, baseA: 0.60, parallax: 0.06, tw: 0.55 },
+      { count: 110, minR: 0.6, maxR: 1.1, baseA: 0.45, parallax: 0.14, tw: 0.42 },
+      { count:  55, minR: 0.9, maxR: 1.6, baseA: 0.35, parallax: 0.26, tw: 0.30 },
     ];
 
-    function buildStars(W, H) {
-      return LAYERS.map(layer =>
-        Array.from({ length: layer.count }, () => ({
-          x:     Math.random() * W,
-          y:     Math.random() * H,
-          r:     layer.minR + Math.random() * (layer.maxR - layer.minR),
+    /* bake one layer into a sprite at a given twinkle phase */
+    function bakeLayer(layer, stars, phase) {
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.floor(W * DPR));
+      c.height = Math.max(1, Math.floor(H * DPR));
+      const g = c.getContext('2d');
+      g.setTransform(DPR, 0, 0, DPR, 0, 0);
+      g.fillStyle = '#F5F5F2';
+      for (const s of stars) {
+        // per-star alpha differs between the two phases -> crossfade twinkles
+        const t = 0.55 + 0.45 * Math.sin(s.phase + phase);
+        g.globalAlpha = layer.baseA * (1 - layer.tw + layer.tw * t);
+        g.beginPath();
+        g.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        g.fill();
+      }
+      return c;
+    }
+
+    function build() {
+      sprites = LAYERS.map((layer) => {
+        const stars = Array.from({ length: layer.count }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: layer.minR + Math.random() * (layer.maxR - layer.minR),
           phase: Math.random() * Math.PI * 2,
-          speed: 0.4 + Math.random() * 0.8,   // twinkle speed
-        }))
-      );
+        }));
+        return { a: bakeLayer(layer, stars, 0), b: bakeLayer(layer, stars, Math.PI) };
+      });
     }
 
     function resize() {
-      DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-      W = canvas.clientWidth;
-      H = canvas.clientHeight;
-      canvas.width  = Math.floor(W * DPR);
+      const nDPR = Math.min(window.devicePixelRatio || 1, 1.5);
+      const nW = canvas.clientWidth, nH = canvas.clientHeight;
+      if (nW === W && nH === H && nDPR === DPR) return;
+      DPR = nDPR; W = nW; H = nH;
+      canvas.width = Math.floor(W * DPR);
       canvas.height = Math.floor(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      starsRef.current = buildStars(W, H);
+      build();
     }
 
-    function onScroll() { scrollRef.current = window.scrollY || 0; }
+    function onScroll() { targetScroll = window.scrollY || 0; }
 
     function frame(now) {
+      // inertial follow — this is what makes the parallax feel alive
+      easedScroll += (targetScroll - easedScroll) * 0.085;
       const t = now * 0.001;
+
       ctx.clearRect(0, 0, W, H);
+      for (let i = 0; i < sprites.length; i++) {
+        const layer = LAYERS[i], sp = sprites[i];
+        if (!sp) continue;
+        let off = (-easedScroll * layer.parallax) % H;
+        if (off > 0) off -= H;
 
-      const stars = starsRef.current;
-      if (!stars) { rafRef.current = requestAnimationFrame(frame); return; }
-
-      LAYERS.forEach((layer, li) => {
-        const offsetY = -(scrollRef.current * layer.parallax) % H;
-
-        stars[li].forEach(s => {
-          // twinkle: opacity pulse
-          const twinkle = reduced ? 1 : (0.55 + 0.45 * Math.sin(t * s.speed + s.phase));
-          const alpha = layer.baseA * twinkle;
-
-          // Two draws: base position + wrapped (seamless vertical loop)
-          const draws = [s.y + offsetY, s.y + offsetY + H, s.y + offsetY - H];
-          draws.forEach(py => {
-            if (py < -4 || py > H + 4) return;
-            ctx.beginPath();
-            ctx.arc(s.x, py, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(245,245,242,${alpha.toFixed(3)})`;
-            ctx.fill();
-          });
-        });
-      });
-
+        // crossfade the two baked phases (skipped when reduced-motion)
+        const mix = reduced ? 1 : 0.5 + 0.5 * Math.sin(t * 0.6 + i * 1.7);
+        for (let pass = 0; pass < 2; pass++) {
+          const img = pass === 0 ? sp.a : sp.b;
+          const alpha = pass === 0 ? mix : 1 - mix;
+          if (alpha <= 0.01) continue;
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(img, 0, off, W, H);
+          ctx.drawImage(img, 0, off + H, W, H);
+        }
+      }
+      ctx.globalAlpha = 1;
       rafRef.current = requestAnimationFrame(frame);
     }
 
-    function start() { if (!rafRef.current) rafRef.current = requestAnimationFrame(frame); }
-    function stop()  { cancelAnimationFrame(rafRef.current); rafRef.current = 0; }
+    function start() { if (!running) { running = true; rafRef.current = requestAnimationFrame(frame); } }
+    function stop()  { running = false; cancelAnimationFrame(rafRef.current); rafRef.current = 0; }
     function onVis() { if (document.hidden) stop(); else start(); }
 
     resize();
     onScroll();
+    easedScroll = targetScroll;
     window.addEventListener('resize', resize, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVis);
@@ -262,6 +287,7 @@ function StarField({ enabled = true }) {
       window.removeEventListener('resize', resize);
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVis);
+      sprites = [];
     };
   }, [enabled]);
 

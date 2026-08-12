@@ -64,48 +64,20 @@ function Method() {
 
 /* ---------- FOUNDER ---------- */
 function Founder() {
-  const chips = [
-    '30+ років співу',
-    '1000+ концертів',
-    '20+ років сценічного досвіду',
-    '10+ років студійної роботи',
-  ];
-
   return (
     <section className="tv-section tv-founder" id="author">
       <div className="tv-founder-grid">
-        <aside className="tv-founder-plate" aria-hidden="true">
-          {/* monogram-style plate with initials */}
-          <div className="tv-founder-monogram">
-            <svg viewBox="0 0 200 200" width="100%" height="100%">
-              <defs>
-                <radialGradient id="rsHalo" cx="50%" cy="50%" r="55%">
-                  <stop offset="0%" stopColor="rgba(200,16,46,0.45)"/>
-                  <stop offset="65%" stopColor="rgba(200,16,46,0.06)"/>
-                  <stop offset="100%" stopColor="rgba(0,0,0,0)"/>
-                </radialGradient>
-              </defs>
-              <circle cx="100" cy="100" r="98" fill="url(#rsHalo)"/>
-              <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(245,245,242,0.10)" strokeWidth="0.7"/>
-              <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(201,162,39,0.32)" strokeWidth="0.7"/>
-              {/* tick ring */}
-              {Array.from({length: 24}).map((_, i) => {
-                const a = (i / 24) * Math.PI * 2;
-                const x1 = 100 + Math.cos(a) * 88, y1 = 100 + Math.sin(a) * 88;
-                const x2 = 100 + Math.cos(a) * 82, y2 = 100 + Math.sin(a) * 82;
-                return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(245,245,242,0.35)" strokeWidth="0.6"/>;
-              })}
-              {/* monogram */}
-              <text x="100" y="118" textAnchor="middle"
-                fontFamily="Stratos, Inter, sans-serif"
-                fontWeight="800" fontSize="80"
-                letterSpacing="-0.04em" fill="#F5F5F2">РС</text>
-              <line x1="100" y1="6" x2="100" y2="194" stroke="rgba(245,245,242,0.18)" strokeWidth="0.5"/>
-            </svg>
-          </div>
+        <aside className="tv-founder-plate">
+          <figure className="tv-founder-photo">
+            <img
+              src="assets/roman-portrait.jpg"
+              alt="Роман Семенчук на сцені з мікрофоном"
+              width="900" height="1200"
+              loading="lazy" decoding="async" />
+          </figure>
 
           <div className="tv-founder-frame">
-            <span className="tv-overline">Plate · founder</span>
+            <span className="tv-overline">Роман Семенчук</span>
             <span className="tv-overline" style={{ color: 'var(--tv-gold)' }}>RS · 001</span>
           </div>
         </aside>
@@ -116,28 +88,33 @@ function Founder() {
             Роман <span style={{ fontStyle: 'italic', fontWeight: 300 }}>Семенчук</span>.
           </h2>
 
-          <ul className="tv-chip-row" aria-label="Регалії">
-            {chips.map((c) => <li key={c} className="tv-chip">{c}</li>)}
-          </ul>
-
           <p className="tv-body" style={{ marginTop: 22, maxWidth: '48ch' }}>
+            Вокаліст і музикант, композитор, звукорежисер і саунд-продюсер.
+            Диктор, ведучий благодійних аукціонів.
+            Голос, який працює і на сцені, і в студії, і в мікрофон перед залом —
+            щоразу з різними вимогами до витривалості.
+          </p>
+
+          <p className="tv-body" style={{ marginTop: 18, maxWidth: '48ch' }}>
             Учасник шоу <strong style={{ color: 'var(--fg)', fontWeight: 500 }}>«Голос Країни» 2021</strong>.
-            Виступав на найбільших українських фестивалях — ZaxidFest, Faine Misto, МHМ,
+            Виступав на найбільших українських фестивалях — ZaxidFest, Faine Misto, МНМ,
             Тарасова Гора, Бандерштат.
             Номінант премії <strong style={{ color: 'var(--tv-gold)', fontWeight: 500 }}>«Best Ukrainian Metal Act 2018»</strong>.
-            Засновник музичних проектів <em>DIMICANDUM</em> і <em>THINKSIDE</em>.
+            Засновник музичних проєктів <em>DIMICANDUM</em> і <em>THINKSIDE</em>.
           </p>
 
           <p className="tv-body" style={{ marginTop: 18, maxWidth: '48ch' }}>
             TrueVoice створив на перетині трьох галузей: вокального досвіду, спортивної реабілітації і нейрофізіології.
           </p>
 
+          {/* numbers live here only — the prose above carries the story,
+              so nothing is stated twice in this section */}
           <div className="tv-founder-stats">
             {[
               ['30+',   'років співу'],
-              ['1000+', 'концертів'],
-              ['2021',  '«Голос Країни»'],
-              ['2018',  'Best UA Metal Act'],
+              ['1000+', 'живих виступів'],
+              ['20+',   'років на сцені'],
+              ['10+',   'років у студії'],
             ].map(([n, l]) => (
               <div key={l} className="cell">
                 <div className="num">{n}</div>
@@ -168,7 +145,7 @@ function Program() {
         idx={4}
         eyebrow="Програма · 7 днів"
         title={<>Сім днів. Сім практик.<br className="tv-hide-narrow"/> Одне повернення голосу.</>}
-        sub="Один урок на день, 20–30 хвилин. Telegram-бот веде тебе крок за кроком. Без вокальної теорії — тільки конкретні тілесні протоколи."
+        sub="Один урок на день, 15–20 хвилин. Telegram-бот веде тебе крок за кроком. Без вокальної теорії — тільки конкретні тілесні протоколи."
         max="48ch"
       />
 
@@ -177,7 +154,7 @@ function Program() {
           <li key={d.n} className="tv-day">
             <div className="day-head">
               <span className="day-num">День {String(d.n).padStart(2,'0')}</span>
-              <span className="day-len">20–30 хв</span>
+              <span className="day-len">15–20 хв</span>
             </div>
             <h3 className="day-t">{d.t}</h3>
             <ul className="day-items">
@@ -204,7 +181,7 @@ function Program() {
 function HowItWorks({ onApply }) {
   const steps = [
     { n: 1, t: 'Оплачуєш курс',                    d: 'Отримуєш доступ до Telegram-бота з усіма матеріалами.' },
-    { n: 2, t: 'Проходиш по одному уроку на день', d: '7 відеоуроків з практиками по 20–30 хвилин кожен.' },
+    { n: 2, t: 'Проходиш по одному уроку на день', d: '7 відеоуроків з практиками по 15–20 хвилин кожен.' },
     { n: 3, t: 'Виконуєш практики',                d: 'Конкретні вправи з диханням, тілом і звуком.' },
     { n: 4, t: 'Отримуєш результат',               d: 'Голос стає живим, тіло розслабленим, з’являється впевненість.' },
   ];
@@ -233,7 +210,7 @@ function HowItWorks({ onApply }) {
 
       <div className="tv-how-cta">
         <button className="tv-btn tv-btn--big" onClick={onApply}>
-          Забрати від&nbsp;15$ <span className="arrow">→</span>
+          Забрати всього за&nbsp;$15 <span className="arrow">→</span>
         </button>
         <span className="tv-small">14 днів гарантії · 7 місяців доступу · Telegram-бот</span>
       </div>
