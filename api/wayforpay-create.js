@@ -123,11 +123,19 @@ module.exports = async (req, res) => {
     .update(signatureString, 'utf8')
     .digest('hex');
 
+  // Where WayForPay reports the result. serviceUrl is the server-to-server
+  // callback that actually opens access; returnUrl is where the buyer's
+  // browser lands in the redirect (non-widget) flow. Neither is part of the
+  // signed field list, so adding them does not affect merchantSignature.
+  const siteUrl = (process.env.SITE_URL || `https://${domain}`).replace(/\/+$/, '');
+
   return res.status(200).json({
     merchantAccount,
     merchantAuthType: 'SimpleSignature',
     merchantDomainName: domain,
     merchantSignature,
+    serviceUrl: `${siteUrl}/api/wayforpay-callback`,
+    returnUrl: `${siteUrl}/success?plan=${planKey}`,
     orderReference,
     orderDate,
     amount,
