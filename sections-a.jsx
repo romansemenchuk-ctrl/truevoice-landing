@@ -139,7 +139,7 @@ function Nav({ onApply }) {
                 boxShadow: '0 0 24px var(--tv-accent-glow)',
                 cursor: 'pointer'
               }}>
-              всього&nbsp;$15&nbsp;→
+              <span className="tv-hide-narrow">всього&nbsp;</span>$15&nbsp;→
             </button>
             <button
               className={`tv-burger ${open ? 'is-open' : ''}`}

@@ -31,6 +31,17 @@
     0 2px 18px rgba(6,6,7,0.85),
     0 0 46px rgba(230,0,18,0.30);
 }
+
+/* "втрачати" sits right where the red strings are densest, so it gets a
+   deeper pool of shadow than the rest of the accent type. Stacked blurs
+   hug the letterforms — no rectangular patch behind the word. */
+.tv-hero-headline .ital {
+  text-shadow:
+    0 0 2px rgba(6,6,7,0.95),
+    0 0 10px rgba(6,6,7,0.92),
+    0 0 26px rgba(6,6,7,0.9),
+    0 2px 44px rgba(6,6,7,0.85);
+}
 /* stroke copy of the wordmark reads better with a touch more ink */
 .tv-hero-wordmark .t1 { -webkit-text-stroke-color: rgba(246,244,240,0.62); }
 
@@ -436,7 +447,12 @@
   .tv-plan { transition: none; }
 }
 
-/* ── 5 · LOGO LOCKUP — keep ACADEMY on phones ──────────── */
+/* ── 5 · LOGO LOCKUP — keep ACADEMY on phones ────────────
+   The lockup must never wrap: on a 390px bar the brand name was
+   breaking onto two lines once the nav CTA grew. The button drops the
+   word "всього" on narrow screens to give the name its room back. */
+.tv-nav-bar > a { flex: none; white-space: nowrap; }
+.tv-nav-bar > a > span { white-space: nowrap; }
 .tv-nav-bar .tv-hide-narrow.tv-logo-sub { display: inline !important; }
 @media (max-width: 719px) {
   .tv-nav-bar .tv-logo-sub {
