@@ -464,9 +464,18 @@
   .tv-nav-bar .tv-logo-sub { letter-spacing: 0.1em !important; }
 }
 
-/* ── 6 · MOBILE FOLD ───────────────────────────────────── */
+/* ── 6 · MOBILE FOLD ─────────────────────────────────────
+   The nav is fixed and 96px tall (30px strip + 65px bar + hairline).
+   The hero was reserving 92px, so the first two pills started underneath
+   it. The page is viewport-fit=cover, so on a notched phone the nav also
+   has to clear the status bar — both sides now use the same inset. */
+.tv-nav { padding-top: env(safe-area-inset-top, 0px); }
+
 @media (max-width: 719px) {
-  .tv-hero { padding-top: 92px; padding-bottom: 64px; }
+  .tv-hero {
+    padding-top: calc(96px + env(safe-area-inset-top, 0px) + 34px);
+    padding-bottom: 64px;
+  }
   .tv-hero-inner { gap: 18px; }
   .tv-hero-main { gap: 12px; }
   .tv-hero-wordmark { font-size: clamp(52px, 19vw, 84px); }
