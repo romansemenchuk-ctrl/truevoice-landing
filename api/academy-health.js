@@ -12,7 +12,8 @@ module.exports=async(req,res)=>{
   const ledger=config(process.env);
   const wfpAccount=String(process.env.WAYFORPAY_MERCHANT_ACCOUNT||'');
   const wfpSecret=String(process.env.WAYFORPAY_SECRET_KEY||'');
-  const bridgeReachable=await ledgerProbe({env:process.env});
+  const oidcToken=String(req.headers?.['x-vercel-oidc-token']||'');
+  const bridgeReachable=await ledgerProbe({env:process.env,oidcToken});
   return res.status(200).json({
    mode:ledger.mode,
    ledgerUrlConfigured:ledger.url.length>0,
