@@ -1,5 +1,5 @@
 'use strict';
-const {config}=require('../lib/academy-ledger.js');
+const {config,ledgerProbe}=require('../lib/academy-ledger.js');
 
 module.exports=async(req,res)=>{
  res.setHeader?.('Cache-Control','private, no-store, max-age=0');
@@ -12,12 +12,14 @@ module.exports=async(req,res)=>{
   const ledger=config(process.env);
   const wfpAccount=String(process.env.WAYFORPAY_MERCHANT_ACCOUNT||'');
   const wfpSecret=String(process.env.WAYFORPAY_SECRET_KEY||'');
+  const bridgeReachable=await ledgerProbe({env:process.env});
   return res.status(200).json({
    mode:ledger.mode,
    ledgerUrlConfigured:ledger.url.length>0,
    ledgerSecretConfigured:ledger.secret.length>=32,
    vercelBypassConfigured:ledger.vercelBypass.length>0,
-   wayForPayConfigured:wfpAccount.length>0&&wfpSecret.length>0
+   wayForPayConfigured:wfpAccount.length>0&&wfpSecret.length>0,
+   bridgeReachable
   });
  }catch(err){
   if(err?.message==='academy_ledger_bad_mode')return res.status(503).json({error:'academy_ledger_bad_mode'});
