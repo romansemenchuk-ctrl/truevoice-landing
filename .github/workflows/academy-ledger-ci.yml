@@ -14,7 +14,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: npm test
+      - run: git diff --check d62205117291eb3f6192df0b343311acb3476e18 HEAD
