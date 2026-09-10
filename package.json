@@ -4,6 +4,6 @@
   "private": true,
   "description": "TrueVoice Mini — static landing + WayForPay serverless checkout/callback.",
   "scripts": {
-    "test": "node api/wayforpay-callback.test.js && node api/wayforpay-create.test.js"
+    "test": "node api/wayforpay-callback.test.js && node api/wayforpay-create.test.js && node api/academy-health.test.js"
   }
 }
