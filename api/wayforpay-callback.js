@@ -16,7 +16,8 @@ module.exports=async(req,res)=>{
  if(!signaturesMatch(expected,data.merchantSignature)){console.warn('[wfp-callback] signature mismatch',{orderReference});return res.status(400).json({error:'bad_signature'});}
  const providerEvent={merchantAccount:data.merchantAccount,orderReference,amount:data.amount,currency:data.currency,authCode:data.authCode,cardPan:data.cardPan,transactionStatus:data.transactionStatus,reasonCode:data.reasonCode,merchantSignature:data.merchantSignature};
  for(const key of ['refundAmount','processingDate','createdDate'])if(data[key]!==undefined)providerEvent[key]=data[key];
- try{await ledgerCall('provider-event',providerEvent);}catch(err){console.error('[wfp-callback] Academy ledger required but unavailable',{orderReference,code:err.message});return res.status(503).json({error:'academy_ledger_unavailable'});}
+ const oidcToken=String(req.headers?.['x-vercel-oidc-token']||'');
+ try{await ledgerCall('provider-event',providerEvent,{oidcToken});}catch(err){console.error('[wfp-callback] Academy ledger required but unavailable',{orderReference,code:err.message});return res.status(503).json({error:'academy_ledger_unavailable'});}
  const time=Math.floor(Date.now()/1000),ack={orderReference,status:'accept',time,signature:hmacMd5(secretKey,[orderReference,'accept',time].join(';'))};
  const status=String(data.transactionStatus||''),order={orderReference,plan:planFromReference(orderReference),status,amount:data.amount,currency:data.currency,email:String(data.email||data.clientEmail||'').trim(),phone:String(data.phone||data.clientPhone||'').trim()};
  if(status!=='Approved')return res.status(200).json(ack);
