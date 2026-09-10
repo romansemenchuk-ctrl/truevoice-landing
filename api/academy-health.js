@@ -16,6 +16,7 @@ module.exports=async(req,res)=>{
    mode:ledger.mode,
    ledgerUrlConfigured:ledger.url.length>0,
    ledgerSecretConfigured:ledger.secret.length>=32,
+   vercelBypassConfigured:ledger.vercelBypass.length>0,
    wayForPayConfigured:wfpAccount.length>0&&wfpSecret.length>0
   });
  }catch(err){
