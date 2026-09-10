@@ -19,7 +19,8 @@ module.exports=async(req,res)=>{
  const orderReference=`tv-${planKey}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,orderDate=Math.floor(Date.now()/1000),productNameArr=[productName],productCountArr=[1],productPriceArr=[amount];
  const signatureString=[merchantAccount,domain,orderReference,orderDate,amount,currency,...productNameArr,...productCountArr,...productPriceArr].join(';');
  const merchantSignature=crypto.createHmac('md5',secretKey).update(signatureString,'utf8').digest('hex');
- try{await ledgerCall('register-order',{reference:orderReference,email:email.toLowerCase(),productId:PRODUCT_IDS[planKey],amountMinor:amountMinor(amount),currency:String(currency).toUpperCase(),purchasedAt:new Date(orderDate*1000).toISOString()});}
+ const oidcToken=String(req.headers?.['x-vercel-oidc-token']||'');
+ try{await ledgerCall('register-order',{reference:orderReference,email:email.toLowerCase(),productId:PRODUCT_IDS[planKey],amountMinor:amountMinor(amount),currency:String(currency).toUpperCase(),purchasedAt:new Date(orderDate*1000).toISOString()},{oidcToken});}
  catch(err){console.error('[wfp-create] Academy ledger required but unavailable',{code:err.message});return res.status(503).json({error:'academy_ledger_unavailable'});}
  const siteUrl=(process.env.SITE_URL||`https://${domain}`).replace(/\/+$/,'');
  return res.status(200).json({merchantAccount,merchantAuthType:'SimpleSignature',merchantDomainName:domain,merchantSignature,serviceUrl:`${siteUrl}/api/wayforpay-callback`,returnUrl:`${siteUrl}/success?plan=${planKey}`,orderReference,orderDate,amount,currency,productName:productNameArr,productCount:productCountArr,productPrice:productPriceArr,clientEmail:email,clientPhone:phone,clientFirstName,clientLastName,language:'UA',plan:planKey});
