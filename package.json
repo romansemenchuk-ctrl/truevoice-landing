@@ -2,8 +2,8 @@
   "name": "truevoice-landing",
   "version": "1.0.0",
   "private": true,
-  "description": "TrueVoice Mini — static landing (no build step) + one Vercel serverless function for WayForPay order signing.",
+  "description": "TrueVoice Mini — static landing + WayForPay serverless checkout/callback.",
   "scripts": {
-    "test": "node api/wayforpay-callback.test.js"
+    "test": "node api/wayforpay-callback.test.js && node api/wayforpay-create.test.js"
   }
 }
